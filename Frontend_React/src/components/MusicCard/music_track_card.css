@@ -1,0 +1,93 @@
+.music_page_audio_player_container{
+  padding-bottom: 10px;
+  width: 410px;
+  box-shadow: 3px 3px 6px 3px black;
+
+}
+.music_page_audio_player_wrapper{
+  padding: 25px;
+}
+.music_page_audio_image {
+height: 310px;
+width: 358px;
+margin-bottom: 1rem;
+border-radius: 10px;
+}
+.music_page_player_btn{
+border: none;
+background-color: transparent; 
+color: white;
+cursor: pointer;
+position: relative;
+top: 2px
+}
+.music_page_player_time_sign{
+  display: flex;
+  height: 22px;
+  justify-content: space-between;
+  font-size: 12px;
+  padding-left: 17px;
+  padding-right: 7px;
+}
+.music_page_track_description{
+  margin-bottom: 3rem;
+  height: 38px;
+}
+.music_page_player_range {
+background-color: rgb(20, 2, 16);
+height: 37px;
+border-radius: 15px;
+padding-left: 5px;
+padding-right: 10px;
+display: flex;
+justify-content: center;
+align-items: center;
+
+}
+.music_page_player_range_timeline{
+  width: 410px;
+  margin-left: 10px;
+}
+.music_page_player_controls{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+.music_page_player_controls_like_wrapper{
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  box-shadow: black 1px 1px 1px 1px;
+  padding: 5px;
+  border-radius: 5px;
+}
+.music_page_player_controls_like_btn{
+  border: none;
+  background-color: transparent;
+  color: white;
+  cursor: pointer;
+  transition: ease-in-out 0.2s;
+}
+.music_page_player_controls_like_btn:hover{
+  color: darkorange;
+}
+.music_page_player_controls_btn_copy{
+  background-color: transparent;
+  color: white;
+  border: none;
+  box-shadow: black 1px 1px 1px 1px;
+  padding: 5px;
+  border-radius: 5px;
+  transition: ease-in-out 0.2s;
+  cursor: pointer;
+}
+.music_page_player_controls_btn_copy:hover{
+  color: darkorange;
+}
+.music_page_player_controls_btn_copy_wrapper{
+  display: flex;
+  gap: 10px;
+  align-items:center ;
+}

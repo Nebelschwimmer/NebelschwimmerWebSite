@@ -1,0 +1,19 @@
+const express = require('express');
+
+const PORT = process.env.PORT || 3010;
+const app = express();
+
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  next();
+});
+
+app.listen(PORT, () => {
+  console.log(`Server listening on ${PORT}`);
+});
+
+const photoGallery = require('./photo-gallery.json');
+app.get('/photo-gallery', (req, res) => {
+res.json({ data: photoGallery });
+});
+
