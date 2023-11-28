@@ -1,11 +1,12 @@
 import './auth.css'
 import { useNavigate, Link } from 'react-router-dom';
 import { Backbutton } from '../BackButton/BackButton';
-import { useEffect, useState } from 'react';
+import { useEffect, useState} from 'react';
 import { useForm, } from "react-hook-form";
 import {getAuth, signOut, deleteUser, updateProfile} from 'firebase/auth'
 import './spinner.css'
 import { ModalWindow } from '../ModalWindow/ModalWindow';
+import CloseIcon from '@mui/icons-material/Close';
 
 export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut, setShowModal}) => {
   
@@ -16,6 +17,9 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
  // Стейт для отображения инфо пользователя
   const [showProfileInfo, setShowProfileInfo] = useState(false)
 
+  const [showClearBtn1, setShowClearBtn1] = useState(false)
+
+  const [showClearBtn2, setShowClearBtn2] = useState(false)
   // Служебные переменные
   const navigate = useNavigate()
   const auth = getAuth();
@@ -69,7 +73,7 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
 
 
 // Логика для формы
-  const {register, handleSubmit, formState: { errors }} = useForm({ mode: "onSubmit" });
+  const {register, handleSubmit, reset, formState: { errors }} = useForm({ mode: "onSubmit" });
 
 // Функция для обновления данных пользователя
   async  function UpdateUserData (userName, avatarURL) {
@@ -106,15 +110,16 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
 
 
 
-
-
   return (
     <div>
       <div className='auth_main'>
         <div className="auth_container">
-          <div onClick={()=>navigate(-1)} className="auth_backbtn"><Backbutton/></div>
+          <div onClick={()=>navigate(-1)} className="auth_backbtn"><Backbutton/>
+          <h1 style={{color:'darkorange'}}>Profile</h1>
+          </div>
+          
             <div className='auth_top'>
-              <h1 style={{color:'darkorange'}}>Profile</h1>
+              
               
               {showProfileInfo && 
               <div className='auth_user_info'>
@@ -141,35 +146,52 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
             {/* Форма */}
             <h2 >Edit Profile</h2>
             <form onSubmit={handleSubmit(sendUpdateData)}>
-              <div className='auth_form'>
+              <div className='auth_form_user'>
               {/* Инпут длля имени */}
-                <div className='auth_label_input'>
-                    <label >Display Name  :</label> 
-                      <input
-                        className='auth_input' 
-                        defaultValue={currentUser.displayName}
-                        type='text'
-                        maxLength='20'
-                        {...register("userName", { required: false })}
-                        // {...userNameRegister}  
-                      >
-                      </input>
-                  </div>
-                  { errors?.userName  &&
-                <small className='auth_small'>{errors.userName?.message}</small>}
-              {/* Инпут длля аватара */}
+                <div className='auth_form_labels'>
+                <label >Display Name  :</label>
+                <label>Avatar URL :</label>   
+                </div>
+                
+                <div className='auth_form_inputs'>
                   <div className='auth_label_input'>
-                    <label>Avatar URL :</label> 
-                      <input
-                        style={{fontSize:'12px'}}
-                        className='auth_input' 
-                        defaultValue={currentUser.photoURL}
-                        type='url'
-                        {...register("avatarURL", { required: false })}  
-                      >
-                      </input>
+                        
+                        <input
+                          className='auth_input' 
+                          defaultValue={currentUser.displayName}
+                          type='text'
+                          maxLength='20'
+
+                          {...register("userName", { required: false })}
+                          // {...userNameRegister}  
+                        >
+                        </input>
+                    
+                        <button type='button' className='auth_clear_btn' onClick={()=>{reset({userName: ''})}}> <CloseIcon fontSize='small'/> </button>
+                    
+                    </div>
+                    { errors?.userName  &&
+                  <small className='auth_small'>{errors.userName?.message}</small>}
+                  {/* Инпут длля аватара */}
+                    <div className='auth_label_input'>
+                    
+                        <input
+                          style={{fontSize:'12px'}}
+                          className='auth_input' 
+                          defaultValue={currentUser.photoURL}
+                          type='url'
+                          {...register("avatarURL", { required: false })}  
+                        >
+                        </input>
+                      
+                        <button type='button' onClick={()=>{reset({avatarURL: ''})}} className='auth_clear_btn'><CloseIcon fontSize='small'/></button>
+                      
+                    </div>   
                   </div>
                 </div>
+                
+                
+                
                 <div className='auth_sign_btn_wrapper'>
                   <button type="submit" className='auth_sign_btn'>Send</button>
                   {/* Spinner */}
@@ -179,7 +201,6 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
                 </div> 
                 
             </form> 
-            <button onClick={()=>{navigate('/')}} className='auth_sign_btn_finish'>Home</button>
           </div>
       </div>
     </div>

@@ -23,7 +23,9 @@ auth.languageCode = 'ru';
 
 const sendResetPasswordData = async (data) => {
   try {
-    await sendPasswordResetEmail(auth, data.email).then(data =>{alert('Reminder sent!');}).then(()=>{navigate('/sign-in')});
+    await sendPasswordResetEmail(auth, data.email)
+    .then(data =>{alert('Reminder sent!');})
+    .then(()=>{navigate('/sign-in')});
   }
   catch(errors) {
 console.log(errors)

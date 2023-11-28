@@ -14,47 +14,49 @@ import {signInWithEmailAndPassword } from 'firebase/auth'
 
 
 export const SignIn = ({signInWithGoogle}) => {
-const navigate = useNavigate()
 
+  // Для навигации
+const navigate = useNavigate()
+// Для формы
 const {register, handleSubmit, formState: { errors }} = useForm({ mode: "onSubmit" });
 
-
+// Для отображении ошибки при входе
 const [loginErr, setLoginErr] = useState(false)
 
+// Достаем данные пользователя
 const auth = getAuth();
 const user = auth.currentUser;
 
-
+// При входе через аккаунт гугл
 const onSignInWithGoogle = () => {
   signInWithGoogle();
   navigate('/')
 }
+// Функция для вход по почте и паролю
+const SingInWithEmailAndPassword = async (email, password) => {
 
-async function SingInWithEmailAndPassword (email, password) {
-
-  signInWithEmailAndPassword(auth, email, password)
+  await signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;
     }).then(()=>{navigate('/')})
     .catch((error) => {
+      
       const errorCode = error.code;
-      if (errorCode === 'auth/invalid-login-credentials' ) setLoginErr(true) 
+      console.log(error.code)
+      if (errorCode === 'auth/invalid-login-credentials' || 'auth/invalid-credential' ) setLoginErr(true) 
     });
   }
 
-
+// Таймаут для отображения ошибки
   useEffect(()=>{
     setTimeout(()=>{
-      if (loginErr !=='')
-      setLoginErr('')
+      if (loginErr )
+      setLoginErr(false)
     }, 5000)
   }, [loginErr])
 
 
-
-
-
-
+// Поле формы для почты
 const emailRegister = register("email", {
   required: "Email required",
   pattern: {
@@ -62,21 +64,13 @@ const emailRegister = register("email", {
     value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
   }
 });
-// Register для пароля
+// Поле формы для пароля
 const passwordRegister = register("password", {
-  required: "Password required",
-  pattern: {
-    message:
-    "Your password must be not shorter than 6 characters and have at least one upper case English letter.",
-    value: /(?=.*?[A-Z])/g
-  }
-});
+  required: "Password required"
+  })
 
 
-
-
-
-
+// Фунция для отправик данных
 const sendSignInData = async (data) => {
   try {
     await SingInWithEmailAndPassword(data.email, data.password)
@@ -86,16 +80,11 @@ const sendSignInData = async (data) => {
   } 
 }
 
-const handleSubmitClick = () => {
-navigate('/')
-}
-
-
 
   return (
     <div>
       <div className='auth_main'>
-        
+        {/* Шапка  */}
         <div className="auth_container">
           <div onClick={()=>navigate(-1)} className="auth_backbtn"><Backbutton/></div>
             <div className='auth_top'>
@@ -126,19 +115,23 @@ navigate('/')
                       className='auth_input' 
                       type='password'
                       {...passwordRegister}
-                      minLength={6}
+                      
                     >
                     </input>
                 </div>
+                {/* Обработка ошибок с паролем */}
                 { errors?.password  &&
                 <small className='auth_small'>{errors.password?.message}</small>
                 }
+                 {/* Ошибка в логине или пароле */}
                 {loginErr && <small style={{color: 'darkorange'}}>Login error! Check if your email address and your password are correct.</small>}
                 </div>
+              {/* Кнопка отправки */}
               <div className='auth_sign_btn_wrapper'>
                 <button type="submit" className='auth_sign_btn'>Sign In</button>
               </div>
             </form> 
+          {/* Кнопки "Войти с гугл" и "Сброс пароля" */}
           <button className='auth_sign_btn' onClick={()=>{onSignInWithGoogle()}}>Sign in with Google Account <GoogleIcon fontSize='large'/></button>
           <button onClick={()=>{navigate('/password-reset')}} className='auth_sign_btn'>Forgot My Password</button>
         </div>
