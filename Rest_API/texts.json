@@ -1,0 +1,30 @@
+[
+  {
+    "text_name": "BORED",
+    "text_id": "11",
+    "text_content_en": "" ,
+    "text_content_ru": "",
+    "text_description_en": "One day He got bored of reigning over the earth and that’s why He imprisoned the daemons in the cave and fettered them deadly with rusty chains.\n There were only two daemons and their names were Wrath and Idleness.\n Idleness presented a crimson-coloured monster with the body of an armadillo the size of a lion; but it had a very special head: it looked like a lily’s flower,\n  and its huge “petals” were covered with a thick shell. In the middle of the “flower” there was a mouth presenting a number of concentric circles of teeth,\n  rotating in different directions. Idleness’s mouth was always open and the teeth were slowly moving round. Luckily or not, but nothing could get into it.",
+    "text_description_ru": "апапвап",
+    "text_likes": "",
+    "text_url": "http://localhost:3020/public/BORED.txt"
+  },
+  {
+    "text_name": "GHOSTS OF SORROW",
+    "text_id": "222",
+    "text_content_en": "",
+    "text_content_ru": "",
+    "text_description": "",
+    "text_likes": "",
+    "text_url": "http://localhost:3020/public/Ghosts_of_sorrow.txt"
+  },
+  {
+    "text_name": "",
+    "text_id": "333",
+    "text_content_en": "",
+    "text_content_ru": "",
+    "text_description": "",
+    "text_likes": "",
+    "text_url": "апапвап"
+  }
+]
