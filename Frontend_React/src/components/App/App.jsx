@@ -28,6 +28,7 @@ const navigate = useNavigate()
 const [user] = useAuthState(auth);
 
 const onSignOut = async () => {
+  setShowModal(true)
   await signOut(auth).then(() => {
     navigate('/');
     setCurrentUser('')

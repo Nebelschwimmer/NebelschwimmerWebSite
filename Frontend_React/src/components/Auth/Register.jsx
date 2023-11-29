@@ -38,7 +38,7 @@ const user = auth.currentUser
 
 
 // Объявление полей для формы
-const {register, handleSubmit, formState: { errors }} = useForm({ mode: "onSubmit" });
+const {register, handleSubmit, getValues, formState: { errors }} = useForm({ mode: "onSubmit" });
 
 const emailRegister = register("email", {
   required: "Email required",
@@ -63,6 +63,18 @@ const passwordRegister = register("password", {
     "Your password must be not shorter than 6 characters",
     }
 });
+
+const passwordConfirm = register('passwordConfirm', {
+  required: true,
+    validate: (value) => {
+      const {password} = getValues();
+      return password === value || 'Passwords do not match!'
+      },
+  
+  
+}
+
+)
 
 // Функция для создания пользователя
 async function RegisterWithEmailPassword(email, password) {
@@ -102,7 +114,7 @@ const sendSignUpData = async (data) => {
             <div className='auth_form'>
               {/* Инпут для email */}
               <div className='auth_label_input'>
-                <label >Email:<span className='auth_req'>*</span></label> 
+                <label className='auth_label'>Email:<span className='auth_req'>*</span></label> 
                   <input 
                   className='auth_input' 
                   type='email'
@@ -114,13 +126,14 @@ const sendSignUpData = async (data) => {
               { errors?.email  &&
                 <small className='auth_small'>{errors.email?.message}</small>
               }
+
               {/* Показываем надпись, что email существует, если приходит ошибка */}
               { emailExists !== '' && <small className='auth_small'>{emailExists}</small>
               }
               
               {/* Инпут для пароля */}
               <div className='auth_label_input'>
-                <label >Password: <span className='auth_req'>*</span></label> 
+                <label className='auth_label'>Password: <span className='auth_req'>*</span></label> 
                   <input 
                   className='auth_input' 
                   type='password'
@@ -133,11 +146,17 @@ const sendSignUpData = async (data) => {
               {errors?.password && (
               <small className='auth_small'>{errors.password?.message}</small>)
               }
+              {/* Подтверждение пароля */}
 
-              {/* <div className='auth_label_input'> 
-                <label >Confirm Password: <span className='auth_req'>*</span></label>
-                  <input className='auth_input' type='password'></input>
-              </div> */}
+              <div className='auth_label_input'> 
+                <label className='auth_label'>Confirm Password: <span className='auth_req'>*</span></label>
+                  <input className='auth_input' type='password'
+                  {...passwordConfirm}
+                  ></input>
+              </div>
+              {/* Текст при несовпадения пароля*/}
+              {errors?.passwordConfirm && (
+              <small className='auth_small'>{errors.passwordConfirm?.message}</small>)}
               </div>
             <div className='auth_sign_btn_wrapper'>
             {/* Кнопка для отправки данных */}

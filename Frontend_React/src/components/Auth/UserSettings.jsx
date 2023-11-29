@@ -25,7 +25,9 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
   const [showError, setShowError] = useState(false)
   // Стейт для надписи об измнениях данных
   const [printChanged, setPrintChanged] = useState(false)
-  
+  // Cтейт для модального окна с подтверждением выхода из аккаунта
+  const [showModalSignout, setShowModalSignout] = useState(false)
+
   // Служебные переменные
   const navigate = useNavigate()
   const auth = getAuth();
@@ -79,10 +81,15 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
     await deleteUser(user)
     .then(() => {
       alert('User deleted.');
+      setCurrentUser('')
       navigate('/') 
   })
     .catch((error) => {
-      alert('An error ocurred') 
+      const errorCode = error.code
+      if (error.code === 'auth/requires-recent-login') {
+        alert ('Login error. Please, sign out and sign in again to be able to delete your account')
+      }
+      console.log(errorCode)
   });
   }
     
@@ -121,7 +128,7 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
   }
 // Для заполнения инпута с именем
   const userNameRegister = register("userName", {
-    required: false,
+    required: 'Display name required!',
     maxLength: {
       value:25,
       message:
@@ -129,6 +136,12 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
       }
     }
   );
+
+
+  const signOutOnClick = () => {
+    setShowModal(true)
+    onSignOut()
+  }
 
 
 
@@ -155,11 +168,37 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
                     <span>{currentUser.email}</span>
                   </div>
                   <div className='auth_user_info_edt_btns_wrapper'>
-                    <button onClick={()=>{onSignOut()}} className='auth_user_info_edt_btn'>Sign Out</button>
+                    <button onClick={()=>{setShowModalSignout(true)}} className='auth_user_info_edt_btn'>Sign Out</button>
+                    
+                      {showModalSignout &&
+                        <div className='modal'>
+                          <div className='modal_content'>
+                              <div className='modal_top'>
+                                <h3 style={{color:'darkorange'}}>Sign out?</h3>
+                              </div>
+                            <div className='modal_btns_wrapper'>
+                              <button onClick={()=>{onSignOut()}} className='modal_btn_warn'>Sign out</button>
+                              <button onClick={()=>{setShowModalSignout(false)}} className='modal_btn'>Cancel</button>
+                            </div>
+                          </div>
+                        </div>
+                    }
+                    
+                    
                     <button onClick={()=>{setShowModal(true)}}  className='auth_user_info_edt_btn'>Delete Accout</button>
                   </div>
+                  
                   {!!showModal &&
-                  <ModalWindow setShowModal={setShowModal} deleteUserAccount={deleteUserAccount}/>
+                  <ModalWindow setShowModal={setShowModal} deleteUserAccount={deleteUserAccount}>
+                    <div className='modal_top'>
+                      <h3 style={{color:'darkorange'}}>Are you sure you want to delete your account?</h3>
+                      <span>This action cannot be undone</span>
+                    </div>
+                    <div className='modal_btns_wrapper'>
+                      <button onClick={()=>{deleteUserAccount()}} className='modal_btn_warn'>Delete</button>
+                      <button onClick={()=>{setShowModal(false)}} className='modal_btn'>Cancel</button>
+                    </div>
+                  </ModalWindow>
                 }
                 
                 </div>

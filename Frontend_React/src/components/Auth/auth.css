@@ -46,7 +46,6 @@ padding-left: 50px;
 .auth_input {
   height: 2rem;
   width: 320px;
-  min-width: 50px;
   font-size: 18px;  
   border-radius: 10px;
   outline-color: rgb(42, 3, 78);
@@ -188,7 +187,7 @@ background-color:rgb(19, 0, 37);
   height: 18px;
   border: none;
   color: rgb(255, 255, 255);
-  opacity: 0.1;
+  opacity: 0.4;
   font-weight: 600;
   transition: 0.2s ease-in-out;
   font-size: 12px;
@@ -237,4 +236,8 @@ background-color:rgb(19, 0, 37);
   align-items: center;
   gap: 1rem;
   margin-bottom: 1rem;
+}
+
+.auth_label{
+  width:110px;
 }
