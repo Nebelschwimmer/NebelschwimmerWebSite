@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react';
 import LoginIcon from '@mui/icons-material/Login';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import LogoutIcon from '@mui/icons-material/Logout';
-// import { onSignOut } from '../../firebase.js';
+
 
 
 export const Header = ({langEn, setLangEn, currentUser, onSignOut, user}) => {
@@ -87,7 +87,7 @@ const navigate = useNavigate()
         <nav className='header_controls_block'>
           <div className='header_aut_nav'>
           
-          {user  ? (
+          {currentUser  ? (
           <div className='header_aut_nav_wrapper'>
             <div onClick={()=>{navigate('/user-settings')}} className='header_aut_name_img_wrapper'>
               <span className='header_aut_nav_name_span'>{name}</span>
@@ -132,7 +132,9 @@ const navigate = useNavigate()
         :
         <nav className='header_controls_block'>
           <div className='header_aut_nav'>
-          {user ? (
+          
+          
+          {currentUser ? (
           <div className='header_aut_nav_wrapper'>
             <span style={{cursor: 'default'}}>{name}</span>
             <img className='header_aut_nav_img' src={avatarURL}/>

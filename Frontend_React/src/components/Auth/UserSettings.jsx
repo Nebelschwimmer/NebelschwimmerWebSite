@@ -7,19 +7,25 @@ import {getAuth, signOut, deleteUser, updateProfile} from 'firebase/auth'
 import './spinner.css'
 import { ModalWindow } from '../ModalWindow/ModalWindow';
 import CloseIcon from '@mui/icons-material/Close';
+import cn from "classnames";
 
 export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut, setShowModal}) => {
   
   // Стейт для спиннера
   const [showSpinner, setShowSpinner] = useState(false);
-    // Стейт для автара
+  // Стейт для автара
   const [avatar, setAvatar] = useState('')
  // Стейт для отображения инфо пользователя
   const [showProfileInfo, setShowProfileInfo] = useState(false)
-
+  // Cтейт для кнопки очистки 1
   const [showClearBtn1, setShowClearBtn1] = useState(false)
-
+  // Cтейт для кнопки очистки 2
   const [showClearBtn2, setShowClearBtn2] = useState(false)
+  // Cтейт для отображения ошибки
+  const [showError, setShowError] = useState(false)
+  // Стейт для надписи об измнениях данных
+  const [printChanged, setPrintChanged] = useState(false)
+  
   // Служебные переменные
   const navigate = useNavigate()
   const auth = getAuth();
@@ -33,6 +39,22 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
       },500)
     }, 
     [showSpinner])
+
+    // Таймаут для надписи с ошибкой
+    useEffect(()=>{
+      setTimeout(()=>{
+      if (showError) setShowError(false)
+      },5000)
+    }, 
+    [showError])
+
+    // Таймаут для надписи об измнениях данных
+    useEffect(()=>{
+      setTimeout(()=>{
+      if (printChanged) setPrintChanged(false)
+      },5000)
+    }, 
+    [printChanged])
   
   // Отображаем инфо о пользователе только если у него есть имя
   useEffect(()=>{
@@ -44,33 +66,26 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
     else setAvatar('https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg')
   },
   [currentUser])
-// // Функция для выхода
-//   const onSignOut = async () => {
-//     await signOut(auth).then(() => {
-//       navigate('/')
-//     }).catch((error) => {
-//       console.log(error)
-//     });
-//     }
+
+
+
  // Указываем Реакту, чтобы не показывал модальное окно после регистрации или входа
     useEffect(()=>{
     if (showProfileInfo) setShowModal(false)
   }, [showProfileInfo])  
 
 // Удаление аккаунта
-    const deleteUserAccount = async () => {
-      await deleteUser(user).then(() => {
+  const deleteUserAccount = async () => {
+    await deleteUser(user)
+    .then(() => {
       alert('User deleted.');
       navigate('/') 
-    }).catch((error) => {
+  })
+    .catch((error) => {
       alert('An error ocurred') 
-    });
-    }
+  });
+  }
     
-
-
-
-
 
 // Логика для формы
   const {register, handleSubmit, reset, formState: { errors }} = useForm({ mode: "onSubmit" });
@@ -80,6 +95,12 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
     await updateProfile(auth.currentUser, {
       displayName: userName, photoURL: avatarURL
     })
+    .then(()=>{setPrintChanged(true)})
+    .catch((error) => {
+      const errorCode = error.code;
+      if (errorCode === 'auth/invalid-profile-attribute') setShowError(true)
+      }
+    )
   }
 
 // Для отправки данных
@@ -98,12 +119,14 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
     console.log(errors)
     } 
   }
-
+// Для заполнения инпута с именем
   const userNameRegister = register("userName", {
     required: false,
-    maxLength:20,
-    message:
+    maxLength: {
+      value:25,
+      message:
       "Your name is too long",
+      }
     }
   );
 
@@ -143,8 +166,11 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
               </div>
                 }     
             </div>
-            {/* Форма */}
-            <h2 >Edit Profile</h2>
+            <div className='auth_edit_top_wrapper'>
+              <h2 >Edit Profile</h2>
+              {printChanged && <p>Profile Updated!</p>}
+            </div>  
+             {/* Форма */}
             <form onSubmit={handleSubmit(sendUpdateData)}>
               <div className='auth_form_user'>
               {/* Инпут длля имени */}
@@ -154,27 +180,25 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
                 </div>
                 
                 <div className='auth_form_inputs'>
-                  <div className='auth_label_input'>
-                        
+                  <div className='auth_label_input'
+                  onFocus={()=>{setShowClearBtn1(true)}}
+                  onBlur={()=>{setShowClearBtn1(false)}}
+                  >
                         <input
                           className='auth_input' 
                           defaultValue={currentUser.displayName}
                           type='text'
-                          maxLength='20'
-
-                          {...register("userName", { required: false })}
-                          // {...userNameRegister}  
+                          {...userNameRegister}  
                         >
                         </input>
-                    
-                        <button type='button' className='auth_clear_btn' onClick={()=>{reset({userName: ''})}}> <CloseIcon fontSize='small'/> </button>
-                    
+                      {/* Кнопка очистики инпута 1 */}
+                        <button type='button' className={cn("auth_clear_btn", { ["auth_clear_btn_Active"]: showClearBtn1 })} onClick={()=>{reset({userName: ''})}}> <CloseIcon fontSize='small'/> </button>
                     </div>
-                    { errors?.userName  &&
-                  <small className='auth_small'>{errors.userName?.message}</small>}
                   {/* Инпут длля аватара */}
-                    <div className='auth_label_input'>
-                    
+                    <div className='auth_label_input'
+                    onFocus={()=>{setShowClearBtn2(true)}}
+                    onBlur={()=>{setShowClearBtn2(false)}}
+                    >
                         <input
                           style={{fontSize:'12px'}}
                           className='auth_input' 
@@ -183,23 +207,28 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
                           {...register("avatarURL", { required: false })}  
                         >
                         </input>
-                      
-                        <button type='button' onClick={()=>{reset({avatarURL: ''})}} className='auth_clear_btn'><CloseIcon fontSize='small'/></button>
-                      
-                    </div>   
+                      {/* Кнопка очистики инпута 2 */}
+                        <button type='button' onClick={()=>{reset({avatarURL: ''})}} className={cn("auth_clear_btn", { ["auth_clear_btn_Active"]: showClearBtn2 })}><CloseIcon fontSize='small'/></button>
+                    </div>
                   </div>
+                </div>
+                {/* Надпись об ошибке при вводе слишком длинного URL + Ошибка при вводе имени */}
+                <div>
+                      {showError && <small style={{color: 'darkorange'}}>This URL is too long, try another picture  </small>}
+                      
+                      { errors?.userName  &&
+                      <small className='auth_small'>{errors.userName?.message}</small>}
                 </div>
                 
                 
-                
+                {/* Кнопка "Отправить" + спиннер */}
                 <div className='auth_sign_btn_wrapper'>
                   <button type="submit" className='auth_sign_btn'>Send</button>
-                  {/* Spinner */}
+                  {/* Спиннер */}
                   {showSpinner &&
                     <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
                   }
                 </div> 
-                
             </form> 
           </div>
       </div>

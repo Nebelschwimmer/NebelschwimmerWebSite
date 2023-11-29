@@ -2,12 +2,12 @@ import './auth.css'
 import GoogleIcon from '@mui/icons-material/Google';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate, Link } from 'react-router-dom';
-import { SignInWithGoogle } from '../../auth';
+
 import { Backbutton } from '../BackButton/BackButton';
 import { useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useForm, } from "react-hook-form";
-import { ResetPasswordViaEmail } from '../../auth';
+
 import {sendPasswordResetEmail } from 'firebase/auth'
 
 

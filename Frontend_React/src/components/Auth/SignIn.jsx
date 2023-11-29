@@ -1,8 +1,6 @@
 import './auth.css'
 import GoogleIcon from '@mui/icons-material/Google';
-import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate, Link } from 'react-router-dom';
-
 import { Backbutton } from '../BackButton/BackButton';
 import { useState, useEffect } from 'react';
 import { getAuth, } from 'firebase/auth';
@@ -88,15 +86,15 @@ const sendSignInData = async (data) => {
         <div className="auth_container">
           <div onClick={()=>navigate(-1)} className="auth_backbtn"><Backbutton/></div>
             <div className='auth_top'>
-              <h1 style={{color:'darkorange'}}>Sign In</h1>
-              <span >New user? <Link style={{color: 'violet'}} to='/register'>Sign up!</Link></span>
+              <h1 style={{color:'darkorange'}}>SIGN IN</h1>
+              <span >New user? <Link style={{color: 'violet'}} to='/register'>SIGN UP!</Link></span>
             </div>
           {/* Форма */}
             <form onSubmit={handleSubmit(sendSignInData)}>
               <div className='auth_form'>
                 {/* Инпут для email */}
                 <div className='auth_label_input'>
-                  <label >Email Address:<span className='auth_req'>*</span></label> 
+                  <label >Email:<span className='auth_req'>*</span></label> 
                     <input 
                       className='auth_input' 
                       type='email'

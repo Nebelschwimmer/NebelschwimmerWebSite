@@ -71,6 +71,8 @@ padding-left: 50px;
   transition: 0.2s ease-in-out;
   box-shadow: black 1px 1px 1px 1px;
   border: none;
+  background-color: rgb(66, 39, 90);
+  color: white
 }
 .auth_sign_btn:hover{
 color: darkorange;
@@ -176,8 +178,30 @@ background-color:rgb(19, 0, 37);
   font-size: 10px;
   border-radius: 100%;
   padding: 10px;
+  visibility: hidden;
 }
-.auth_clear_btn:hover{
+
+.auth_clear_btn_Active{
+  background-color: transparent;
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  border: none;
+  color: rgb(255, 255, 255);
+  opacity: 0.1;
+  font-weight: 600;
+  transition: 0.2s ease-in-out;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+  border-radius: 100%;
+  padding: 10px;
+  visibility:visible
+}
+
+.auth_clear_btn_Active:hover{
   background-color: rgb(208, 178, 237);
   color: rgb(63, 63, 63);
   opacity: 0.6;
@@ -186,15 +210,18 @@ background-color:rgb(19, 0, 37);
 .auth_form_labels{
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-between;
+  align-items: stretch;
   gap: 1rem;
-  height: 88px;
+
+  height: 78px;
   
 }
 .auth_form_inputs{
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-items: space-between;;
   gap: 1rem
 }
 .auth_form_clear_btns_wrapper{
@@ -209,5 +236,5 @@ background-color:rgb(19, 0, 37);
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
