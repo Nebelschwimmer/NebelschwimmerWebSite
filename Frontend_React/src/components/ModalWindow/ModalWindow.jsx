@@ -5,22 +5,16 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { useState } from 'react';
 import './modalWindow.css'
+import cn from "classnames";
 
-export  function ModalWindow({setShowModal, deleteUserAccount, children}) {
+
+export  function ModalWindow({setShowModal, showModal, deleteUserAccount, children}) {
 
 
 
   return (
-    <div className='modal'>
-        <div className='modal_content'>
-          {/* <div className='modal_top'>
-            <h3 style={{color:'darkorange'}}>Are you sure you want to delete your account?</h3>
-            <span>This action cannot be undone</span>
-          </div>
-          <div className='modal_btns_wrapper'>
-            <button onClick={()=>{deleteUserAccount()}} className='modal_btn_warn'>Delete</button>
-            <button onClick={()=>{setShowModal(false)}} className='modal_btn'>Cancel</button>
-          </div> */}
+    <div className={cn("modal", { ["active"]: showModal })} onClick={()=>{setShowModal(false)}}>
+        <div  className={cn("modal_content", { ["active"]: showModal })}  onClick={(e) => e.stopPropagation()}>
           {children}
         </div>
     </div>

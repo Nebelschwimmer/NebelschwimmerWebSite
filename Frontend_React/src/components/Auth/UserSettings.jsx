@@ -132,18 +132,10 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
     maxLength: {
       value:25,
       message:
-      "Your name is too long",
+      "Your name is too long, it must not exceed 25 characters",
       }
     }
   );
-
-
-  const signOutOnClick = () => {
-    setShowModal(true)
-    onSignOut()
-  }
-
-
 
 
   return (
@@ -156,7 +148,7 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
           
             <div className='auth_top'>
               
-              
+              {/* Отображаем блок с инфо о пользователе и кнопками только если введено имя */}
               {showProfileInfo && 
               <div className='auth_user_info'>
                 <div>
@@ -169,27 +161,27 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
                   </div>
                   <div className='auth_user_info_edt_btns_wrapper'>
                     <button onClick={()=>{setShowModalSignout(true)}} className='auth_user_info_edt_btn'>Sign Out</button>
+                    {/* Модальное окно с подтверднением выхода из аккаунта */}
+                      {!!showModalSignout &&
                     
-                      {showModalSignout &&
-                        <div className='modal'>
-                          <div className='modal_content'>
+                        <div className={cn("modal", { ["active"]: showModalSignout })} onClick={()=>{setShowModalSignout(false)}}>
+                          <div className={cn("modal_content", { ["active"]: showModalSignout })}  onClick={(e) => e.stopPropagation()}>
                               <div className='modal_top'>
                                 <h3 style={{color:'darkorange'}}>Sign out?</h3>
                               </div>
-                            <div className='modal_btns_wrapper'>
-                              <button onClick={()=>{onSignOut()}} className='modal_btn_warn'>Sign out</button>
-                              <button onClick={()=>{setShowModalSignout(false)}} className='modal_btn'>Cancel</button>
+                              <div className='modal_btns_wrapper'>
+                                <button onClick={()=>{onSignOut()}} className='modal_btn_warn'>Sign out</button>
+                                <button onClick={()=>{setShowModalSignout(false)}} className='modal_btn'>Cancel</button>
                             </div>
                           </div>
-                        </div>
+                      </div>
+                    
                     }
-                    
-                    
                     <button onClick={()=>{setShowModal(true)}}  className='auth_user_info_edt_btn'>Delete Accout</button>
                   </div>
-                  
+                  {/* Модальное окно с подтверждением удаления */}
                   {!!showModal &&
-                  <ModalWindow setShowModal={setShowModal} deleteUserAccount={deleteUserAccount}>
+                  <ModalWindow setShowModal={setShowModal} showModal={showModal}>
                     <div className='modal_top'>
                       <h3 style={{color:'darkorange'}}>Are you sure you want to delete your account?</h3>
                       <span>This action cannot be undone</span>
@@ -217,7 +209,7 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
                 <label >Display Name  :</label>
                 <label>Avatar URL :</label>   
                 </div>
-                
+                {/* Блок с инпутами. При фокусировке отображаются кнопки очистки ввода. При расфокусировке они исчезают */}
                 <div className='auth_form_inputs'>
                   <div className='auth_label_input'
                   onFocus={()=>{setShowClearBtn1(true)}}
@@ -253,10 +245,9 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
                 </div>
                 {/* Надпись об ошибке при вводе слишком длинного URL + Ошибка при вводе имени */}
                 <div>
-                      {showError && <small style={{color: 'darkorange'}}>This URL is too long, try another picture  </small>}
-                      
-                      { errors?.userName  &&
-                      <small className='auth_small'>{errors.userName?.message}</small>}
+                  {showError && <small style={{color: 'darkorange'}}>This URL is too long, try another picture  </small>}
+                  { errors?.userName  &&
+                  <small className='auth_small'>{errors.userName?.message}</small>}
                 </div>
                 
                 

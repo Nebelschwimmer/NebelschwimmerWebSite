@@ -68,7 +68,7 @@ const passwordConfirm = register('passwordConfirm', {
   required: true,
     validate: (value) => {
       const {password} = getValues();
-      return password === value || 'Passwords do not match!'
+      return password === value || 'Passwords do not match'
       },
   
   
@@ -144,7 +144,7 @@ const sendSignUpData = async (data) => {
               </div>
               {/* Текст при ошибках пароля*/}
               {errors?.password && (
-              <small className='auth_small'>{errors.password?.message}</small>)
+                <small className='auth_small'>{errors.password?.message}</small>)
               }
               {/* Подтверждение пароля */}
 
@@ -156,7 +156,7 @@ const sendSignUpData = async (data) => {
               </div>
               {/* Текст при несовпадения пароля*/}
               {errors?.passwordConfirm && (
-              <small className='auth_small'>{errors.passwordConfirm?.message}</small>)}
+                <small className='auth_small'>{errors.passwordConfirm?.message}</small>)}
               </div>
             <div className='auth_sign_btn_wrapper'>
             {/* Кнопка для отправки данных */}

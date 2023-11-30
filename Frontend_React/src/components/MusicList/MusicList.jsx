@@ -2,7 +2,7 @@ import music_tracks_data from './Music_list.json'
 import {MusicCard} from '../MusicCard/MusicCard'
 import './music_track_list.css'
 import { useState, useEffect } from 'react'
-import {api} from '../../utils/api'
+
 
 export const MusicList = ({langEn}) => {
   // const music_track_list_stingrified = JSON.stringify(music_tracks_data)
@@ -17,6 +17,7 @@ useEffect(()=> {
   .then((result)=> setTrackList(result.data) )
 }, [])
 console.log(trackList)
+
 
 
 // useEffect(()=> {

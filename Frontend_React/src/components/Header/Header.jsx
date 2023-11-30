@@ -132,8 +132,6 @@ const navigate = useNavigate()
         :
         <nav className='header_controls_block'>
           <div className='header_aut_nav'>
-          
-          
           {currentUser ? (
           <div className='header_aut_nav_wrapper'>
             <span style={{cursor: 'default'}}>{name}</span>
