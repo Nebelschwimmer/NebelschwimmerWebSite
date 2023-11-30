@@ -5,8 +5,7 @@ import { useState, useEffect } from 'react'
 
 
 export const MusicList = ({langEn}) => {
-  // const music_track_list_stingrified = JSON.stringify(music_tracks_data)
-  // const music_track_list = JSON.parse(music_track_list_stingrified)
+
 
 const [trackList, setTrackList] = useState([]);
 
@@ -17,15 +16,6 @@ useEffect(()=> {
   .then((result)=> setTrackList(result.data) )
 }, [])
 console.log(trackList)
-
-
-
-// useEffect(()=> {
-// //   api.getTrackList().then((data)=>setTrackList(data))
-// // }, [])
-// // console.log(trackList)
-
-
 
 
 

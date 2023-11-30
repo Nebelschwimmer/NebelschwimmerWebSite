@@ -134,7 +134,7 @@ export const MusicCard = ({name, langEn, description_en, description_ru, image, 
           <div className="music_page_player_controls">
             <div className="music_page_player_controls_like_wrapper">
               <button className="music_page_player_controls_like_btn" title={langEn ? 'Like' : 'Нравится'}><ThumbUpOutlinedIcon fontSize="small"/></button>
-              <span className="music_page_player_controls_like_num">{likes}</span>
+              <span className="music_page_player_controls_like_num">{likes?.length}</span>
             </div>
             <div className="music_page_player_controls_btn_copy_wrapper">
             {copied && <span className="music_player_copied_temp_span">{langEn? 'Copied!' : "Скопировано!"}</span>}
