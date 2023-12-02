@@ -73,6 +73,15 @@ align-items: center;
 .music_page_player_controls_like_btn:hover{
   color: darkorange;
 }
+
+.music_page_player_controls_like_btn_Active{
+  border: none;
+  background-color: transparent;
+  color: darkorange;
+  cursor: pointer;
+  transition: ease-in-out 0.2s; 
+}
+
 .music_page_player_controls_btn_copy{
   background-color: transparent;
   color: white;

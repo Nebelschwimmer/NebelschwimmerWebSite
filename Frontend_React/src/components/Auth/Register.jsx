@@ -17,64 +17,61 @@ export const Register = ({currentUser, setCurrentUser, signInWithGoogle}) => {
   const [showBtn, setShowBtn] = useState(true)
 
 
-// Таймаут для надписи об ошибке
-useEffect(()=>{
-  setTimeout(()=>{
-    if (emailExists !=='')
-    setEmailExists('')
-  }, 3000)
-}, [emailExists])
+  // Таймаут для надписи об ошибке
+  useEffect(()=>{
+    setTimeout(()=>{
+      if (emailExists !=='')
+      setEmailExists('')
+    }, 3000)
+  }, [emailExists])
 
-// При входе с аккаунта Google
-const onSignInWithGoogle = () => {
-  signInWithGoogle();
-  navigate('/')
-}
+  // При входе с аккаунта Google
+  const onSignInWithGoogle = () => {
+    signInWithGoogle();
+    navigate('/')
+  }
 
 
-// Достаем пользователя из Firebase
-const auth = getAuth();
-const user = auth.currentUser
+  // Достаем пользователя из Firebase
+  const auth = getAuth();
+  const user = auth.currentUser
 
 
 // Объявление полей для формы
-const {register, handleSubmit, getValues, formState: { errors }} = useForm({ mode: "onSubmit" });
+  const {register, handleSubmit, getValues, formState: { errors }} = useForm({ mode: "onSubmit" });
 
-const emailRegister = register("email", {
-  required: "Email required",
-  pattern: {
-    message: "Incrorrect email!",
-    value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
-  }
-});
+  const emailRegister = register("email", {
+    required: "Email required",
+    pattern: {
+      message: "Incrorrect email!",
+      value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+    }
+  });
 
 
 // Register для пароля
-const passwordRegister = register("password", {
-  required: "Password required",
-  pattern: {
-    message:
-    "Your password must be not shorter than 6 characters and have at least one upper case English letter.",
-    value: /(?=.*?[A-Z])/g
-  },
-  minLength: {
-    value:6,
-    message:
-    "Your password must be not shorter than 6 characters",
-    }
-});
-
-const passwordConfirm = register('passwordConfirm', {
-  required: true,
-    validate: (value) => {
-      const {password} = getValues();
-      return password === value || 'Passwords do not match'
-      },
-  
-  
-}
-
-)
+  const passwordRegister = register("password", {
+    required: "Password required",
+    pattern: {
+      message:
+      "Your password must be not shorter than 6 characters and have at least one upper case English letter.",
+      value: /(?=.*?[A-Z])/g
+    },
+    minLength: {
+      value:6,
+      message:
+      "Your password must be not shorter than 6 characters",
+      }
+  });
+// Для подтверждения
+  const passwordConfirm = register('passwordConfirm', {
+    required: true,
+      validate: (value) => {
+        const {password} = getValues();
+        return password === value || 'Passwords do not match'
+        },
+      }
+  ) 
 
 // Функция для создания пользователя
 async function RegisterWithEmailPassword(email, password) {
@@ -142,32 +139,30 @@ const sendSignUpData = async (data) => {
                   >
                   </input>
               </div>
-              {/* Текст при ошибках пароля*/}
-              {errors?.password && (
-                <small className='auth_small'>{errors.password?.message}</small>)
-              }
-              {/* Подтверждение пароля */}
-
-              <div className='auth_label_input'> 
-                <label className='auth_label'>Confirm Password: <span className='auth_req'>*</span></label>
-                  <input className='auth_input' type='password'
-                  {...passwordConfirm}
-                  ></input>
+                {/* Текст при ошибках пароля*/}
+                {errors?.password && (
+                  <small className='auth_small'>{errors.password?.message}</small>)
+                }
+                 {/* Подтверждение пароля */}
+                <div className='auth_label_input'> 
+                  <label className='auth_label'>Confirm Password: <span className='auth_req'>*</span></label>
+                    <input className='auth_input' type='password'
+                    {...passwordConfirm}
+                    ></input>
+                </div>
+                {/* Текст при несовпадения пароля*/}
+                {errors?.passwordConfirm && (
+                  <small className='auth_small'>{errors.passwordConfirm?.message}</small>)}
               </div>
-              {/* Текст при несовпадения пароля*/}
-              {errors?.passwordConfirm && (
-                <small className='auth_small'>{errors.passwordConfirm?.message}</small>)}
-              </div>
-            <div className='auth_sign_btn_wrapper'>
-            {/* Кнопка для отправки данных */}
-            {showBtn &&
-              <button type="submit" className='auth_sign_btn'>Create My Account</button>
-            } 
-            </div>
+              <div className='auth_sign_btn_wrapper'>
+                {/* Кнопка для отправки данных */}
+                
+                  <button type="submit" className='auth_sign_btn'>Create My Account</button>
               
+              </div>
           </form> 
         
-          
+          {/* Кнопка для входа по аккаунту Гугл */}
           <button className='auth_sign_btn' onClick={()=>{onSignInWithGoogle()}}>Sign in with Google Account <GoogleIcon fontSize='large'/></button>
           
         </div>

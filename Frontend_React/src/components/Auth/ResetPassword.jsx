@@ -32,11 +32,6 @@ console.log(errors)
   } 
 }
 
-const handleSubmitClick = () => {
-navigate('/')
-}
-
-
 
   return (
     <div className='auth_layout'>
@@ -59,7 +54,7 @@ navigate('/')
                     >
                     </input>
                 </div>
-                <span>A reminder will be sent to your e-mail box.</span>
+                <span>A reset link will be sent to your e-mail box.</span>
                 <span>Check it, then sign in with the new password</span>
                 
                 {/* <div className='auth_label_input'>

@@ -9,15 +9,24 @@ import {download} from '../../utils/download'
 import { Link } from "react-router-dom";
 import DownloadIcon from '@mui/icons-material/Download';
 import { useForm } from "react-hook-form";
-
+import cn from 'classnames'
 
 export const MusicCard = ({name, langEn, description_en, description_ru, image, source, likes }) => {
+  // Стейт для лайков
+  const [musicIsLiked, setMusicIsLiked] = useState(false)
+  
+  useEffect(()=> {
+    if (likes.length !== 0)
+    setMusicIsLiked(true)
+  }, [likes])
   
 
-  
-  
+
+
   // Логика для плеера
   const [isPlaying, setIsPlaying] = useState(false)  
+ 
+  
   const [play, { pause, duration, sound }] = useSound(source);
   const [currentTime, setCurrentTime] = useState({
     min: "",
@@ -63,8 +72,6 @@ export const MusicCard = ({name, langEn, description_en, description_ru, image, 
     return () => clearInterval(interval);
   }, [sound]);
 
-
-  // const {register, handleSubmit, formState: { errors }} = useForm({ mode: "onSubmit" });
 
   // Функция для копирования
   
@@ -133,12 +140,18 @@ export const MusicCard = ({name, langEn, description_en, description_ru, image, 
         </div>
           <div className="music_page_player_controls">
             <div className="music_page_player_controls_like_wrapper">
-              <button className="music_page_player_controls_like_btn" title={langEn ? 'Like' : 'Нравится'}><ThumbUpOutlinedIcon fontSize="small"/></button>
+              {/* Кнопка с лайком */}
+              <button  className={cn("music_page_player_controls_like_btn", { ["music_page_player_controls_like_btn_Active"]: musicIsLiked })} title={langEn ? 'Like' : 'Нравится'}><ThumbUpOutlinedIcon fontSize="small"/></button>
+              {/* Количество лайков */}
               <span className="music_page_player_controls_like_num">{likes?.length}</span>
             </div>
+
             <div className="music_page_player_controls_btn_copy_wrapper">
+            {/* Попап при копировании, исчезает */}
             {copied && <span className="music_player_copied_temp_span">{langEn? 'Copied!' : "Скопировано!"}</span>}
+             {/* Кнопка для копирования ссылки на аудио файл */}
             <button className="music_page_player_controls_btn_copy" title={langEn ? 'Copy link' : 'Копировать ссылку'} onClick={()=>copyOnClick()}><ContentCopyIcon fontSize="small"/></button>
+            {/* Кнопка для скачивания */}
             <Link to={`${source}`} target="_blank">
               <button title={langEn ? 'Download' : 'Скачать'} className="music_page_player_controls_btn_copy">
                 <DownloadIcon fontSize="small"/>
