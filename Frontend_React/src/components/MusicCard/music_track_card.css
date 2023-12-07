@@ -77,6 +77,9 @@ align-items: center;
   background-color: transparent;
   color: white;
   cursor: pointer;
+  display: flex;
+  gap: 10px;
+  align-items: center;
   transition: ease-in-out 0.2s;
 }
 .music_page_player_controls_like_btn:hover{
@@ -154,4 +157,17 @@ align-items: center;
   bottom: 47px;
   width: 290px;
   font-weight: 600;
+}
+.music_player_copied_temp_span{
+  font-size: 12px;
+  opacity: 0;
+  transition: 0.2s ease-in-out;
+}
+.music_player_copied_temp_span_Active{
+  font-size: 12px;
+  opacity: 0.8;
+}
+.music_page_player_controls_like_num{
+  font-size: 12px;
+  opacity: 0.8;
 }

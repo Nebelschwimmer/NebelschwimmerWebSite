@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { getAuth, } from 'firebase/auth';
 import { useForm, } from "react-hook-form";
 import {signInWithEmailAndPassword } from 'firebase/auth'
-
+import './spinner.css'
 
 
 
@@ -20,6 +20,9 @@ const {register, handleSubmit, formState: { errors }} = useForm({ mode: "onSubmi
 
 // Для отображении ошибки при входе
 const [loginErr, setLoginErr] = useState(false)
+
+  // Стейт для спиннера
+  const [showSpinner, setShowSpinner] = useState(false);
 
 // Достаем данные пользователя
 const auth = getAuth();
@@ -71,6 +74,7 @@ const passwordRegister = register("password", {
 // Фунция для отправик данных
 const sendSignInData = async (data) => {
   try {
+    setShowSpinner(true);
     await SingInWithEmailAndPassword(data.email, data.password)
   }
   catch(errors) {
@@ -127,6 +131,9 @@ const sendSignInData = async (data) => {
               {/* Кнопка отправки */}
               <div className='auth_sign_btn_wrapper'>
                 <button type="submit" className='auth_sign_btn'>Sign In</button>
+                {showSpinner &&
+                    <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
+                  }
               </div>
             </form> 
           {/* Кнопки "Войти с гугл" и "Сброс пароля" */}

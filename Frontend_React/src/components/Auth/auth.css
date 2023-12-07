@@ -241,3 +241,18 @@ background-color:rgb(19, 0, 37);
 .auth_label{
   width:110px;
 }
+.auth_updated{
+  opacity: 0;
+  transition: 0.2s ease-in-out;
+  font-size: 14px;
+}
+.auth_updated_Active{
+  opacity: 0.4;
+}
+.auth_edit_top_wrapper{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 23px;
+  gap: 1rem
+}

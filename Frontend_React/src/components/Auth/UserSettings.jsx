@@ -167,7 +167,7 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
                         <div className={cn("modal", { ["active"]: showModalSignout })} onClick={()=>{setShowModalSignout(false)}}>
                           <div className={cn("modal_content", { ["active"]: showModalSignout })}  onClick={(e) => e.stopPropagation()}>
                               <div className='modal_top'>
-                                <h3 style={{color:'darkorange'}}>Sign out?</h3>
+                                <h3 style={{color:'darkorange'}}>Are you sure?</h3>
                               </div>
                               <div className='modal_btns_wrapper'>
                                 <button onClick={()=>{onSignOut()}} className='modal_btn_warn'>Sign out</button>
@@ -199,7 +199,7 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
             </div>
             <div className='auth_edit_top_wrapper'>
               <h2 >Edit Profile</h2>
-              {printChanged && <p>Profile Updated!</p>}
+              <small className={cn("auth_updated", { ["auth_updated_Active"]: printChanged })}>Profile Updated!</small>
             </div>  
              {/* Форма */}
             <form onSubmit={handleSubmit(sendUpdateData)}>

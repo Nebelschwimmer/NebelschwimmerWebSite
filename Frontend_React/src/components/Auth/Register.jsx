@@ -5,7 +5,7 @@ import { Backbutton } from '../BackButton/BackButton';
 import { useEffect, useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useForm, } from "react-hook-form";
-
+import './spinner.css'
 
 
 export const Register = ({currentUser, setCurrentUser, signInWithGoogle}) => {
@@ -13,16 +13,15 @@ export const Register = ({currentUser, setCurrentUser, signInWithGoogle}) => {
 // Стейт для надписи об ошибке
   const [emailExists, setEmailExists] = useState('')
 
-  // Стейт для отображения кнопок "Войти с Google" и "Cледующий шаг"
-  const [showBtn, setShowBtn] = useState(true)
-
+    // Стейт для спиннера
+    const [showSpinner, setShowSpinner] = useState(false);
 
   // Таймаут для надписи об ошибке
   useEffect(()=>{
     setTimeout(()=>{
       if (emailExists !=='')
       setEmailExists('')
-    }, 3000)
+    }, 5000)
   }, [emailExists])
 
   // При входе с аккаунта Google
@@ -47,6 +46,14 @@ export const Register = ({currentUser, setCurrentUser, signInWithGoogle}) => {
       value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
     }
   });
+
+useEffect(()=>{
+  if (emailExists)
+  setShowSpinner(false)
+},
+[emailExists])
+
+
 
 
 // Register для пароля
@@ -92,7 +99,8 @@ async function RegisterWithEmailPassword(email, password) {
 
 // Отправляем данные формы
 const sendSignUpData = async (data) => {
-    await RegisterWithEmailPassword(data.email, data.password)   
+  setShowSpinner(true)
+  await RegisterWithEmailPassword(data.email, data.password)   
 }
 
 
@@ -158,7 +166,9 @@ const sendSignUpData = async (data) => {
                 {/* Кнопка для отправки данных */}
                 
                   <button type="submit" className='auth_sign_btn'>Create My Account</button>
-              
+                  {showSpinner &&
+                    <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
+                  }
               </div>
           </form> 
         

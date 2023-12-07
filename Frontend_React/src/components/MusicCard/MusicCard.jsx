@@ -17,6 +17,11 @@ export const MusicCard = ({track_name, track, langEn, track_description_en, hand
   const [showPopoverNotAuth, setShowPopoverNotAuth] = useState(false)
   // Стейт для изменения класса кнопки с редактированием
   const [showEditBtn, setShowEditBtn] = useState(false)
+  // Стейт для изменения класса кнопки для копирования
+  const [showCopyBtn, setShowCopyBtn] = useState(false)
+    // Стейт для изменения класса кнопки для скачивания
+    const [showDownloadBtn, setShowDownloadBtn] = useState(false)
+
 
 
 
@@ -141,9 +146,7 @@ useEffect(()=>{
     <div>
       <div className="music_page_audio_player_wrapper">
         <div className="music_page_audio_player_edit_wrpapper" >
-          <button className={cn("music_page_audio_player_edit_btn", { ["music_page_audio_player_edit_btn_Visible"]: showEditBtn })} 
-          onMouseEnter={()=>{setShowEditBtn(true)}} 
-          onMouseLeave={()=>{setShowEditBtn(false)}}>{langEn ? 'Edit' : 'Редактировать'}<EditIcon fontSize="14px"/></button>
+        
         </div>
         <div>
           <h3 className="music_page_track_title">{track_name}</h3>
@@ -202,26 +205,45 @@ useEffect(()=>{
           
             <div className="music_page_player_controls_like_wrapper">
               {/* Кнопка с лайком */}
-              <button onClick={()=>{handleLikeClick()}}  className={cn("music_page_player_controls_like_btn", { ["music_page_player_controls_like_btn_Active"]: musicIsLiked })} title={langEn ? 'Like' : 'Нравится'}><ThumbUpOutlinedIcon fontSize="14px"/></button>
+              <button onClick={()=>{handleLikeClick()}}  className={cn("music_page_player_controls_like_btn", { ["music_page_player_controls_like_btn_Active"]: musicIsLiked })} title={langEn ? 'Like' : 'Нравится'}><ThumbUpOutlinedIcon fontSize="14px"/>
+                <span >{track_likes.length}</span>
+              </button>
             
               {/* Количество лайков */}
-              <span className="music_page_player_controls_like_num">{track_likes.length}</span>
+              
             </div>
 
+
             <div className="music_page_player_controls_btn_copy_wrapper">
+              
+              {/* Попап при копировании, исчезает */}
+              <span className={cn("music_player_copied_temp_span", {["music_player_copied_temp_span_Active"]: copied})} > {langEn? 'Copied!' : "Скопировано!"}</span>
+              
+              <button className={cn("music_page_audio_player_edit_btn", { ["music_page_audio_player_edit_btn_Visible"]: showEditBtn })} 
+                title={langEn ? 'Edit' : 'Редактировать'}
+                onMouseEnter={()=>{setShowEditBtn(true)}} 
+                onMouseLeave={()=>{setShowEditBtn(false)}}><EditIcon fontSize="14px"/>
+              </button>
+
+
+              
+              {/* Кнопка для копирования ссылки на аудио файл */}
+              <button className={cn("music_page_audio_player_edit_btn", { ["music_page_audio_player_edit_btn_Visible"]: showCopyBtn })}  
+              title={langEn ? 'Copy link' : 'Копировать ссылку'} 
+              onMouseEnter={()=>{setShowCopyBtn(true)}} 
+              onMouseLeave={()=>{setShowCopyBtn(false)}}
+              onClick={()=>copyOnClick()}><ContentCopyIcon fontSize="14px"/></button>
+              {/* Кнопка для скачивания */}
             
-            {/* Попап при копировании, исчезает */}
-            {copied && <span className="music_player_copied_temp_span">{langEn? 'Copied!' : "Скопировано!"}</span>}
-            
-            {/* Кнопка для копирования ссылки на аудио файл */}
-            <button className="music_page_player_controls_btn_copy" title={langEn ? 'Copy link' : 'Копировать ссылку'} onClick={()=>copyOnClick()}><ContentCopyIcon fontSize="14px"/></button>
-            {/* Кнопка для скачивания */}
-            
-              <button onClick={()=>{downloadOnClick()}} title={langEn ? 'Download' : 'Скачать'} className="music_page_player_controls_btn_copy">
+              <button 
+              className={cn("music_page_audio_player_edit_btn", { ["music_page_audio_player_edit_btn_Visible"]: showDownloadBtn })}
+              onMouseEnter={()=>{setShowDownloadBtn(true)}} 
+              onMouseLeave={()=>{setShowDownloadBtn(false)}}
+              onClick={()=>{downloadOnClick()}} title={langEn ? 'Download' : 'Скачать'} >
                 <DownloadIcon fontSize="14px"/>
               </button>
               
-            </div>
+              </div>
             
           </div>
               {showPopoverNotAuth && 
