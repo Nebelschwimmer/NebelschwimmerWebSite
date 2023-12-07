@@ -5,21 +5,43 @@ import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import './music_track_card.css';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import {download} from '../../utils/download'
-import { Link } from "react-router-dom";
 import DownloadIcon from '@mui/icons-material/Download';
-import { useForm } from "react-hook-form";
 import cn from 'classnames'
+import EditIcon from '@mui/icons-material/Edit';
+import { Link } from "react-router-dom";
 
-export const MusicCard = ({name, langEn, description_en, description_ru, image, source, likes }) => {
+export const MusicCard = ({track_name, track, langEn, track_description_en, handleMusicLike, track_id, currentUser, track_description_ru, track_image, track_source, track_likes }) => {
   // Стейт для лайков
   const [musicIsLiked, setMusicIsLiked] = useState(false)
-  
+  // Стейт для попапа о том, что нужно авторизоваться
+  const [showPopoverNotAuth, setShowPopoverNotAuth] = useState(false)
+  // Стейт для изменения класса кнопки с редактированием
+  const [showEditBtn, setShowEditBtn] = useState(false)
+
+
+
+
+  // Чтобы отлайканные актуальный юзером карточки меняли цвет лайка на оранжевый, а при снятии лайка - обратно становились белыми  
   useEffect(()=> {
-    if (likes.length !== 0)
-    setMusicIsLiked(true)
-  }, [likes])
+    if (track_likes?.some((s) => s === currentUser.uid))
+    setMusicIsLiked(true);
+  else setMusicIsLiked(false);
+  }, [track_likes, currentUser])
   
+
+// Кнопка при нажатии на лайк
+const handleLikeClick = () => {
+  if (currentUser !== '')
+  {handleMusicLike(track);
+    setShowPopoverNotAuth(false)}
+  
+  else setShowPopoverNotAuth(true)
+} 
+
+useEffect(()=>{
+  if (showPopoverNotAuth)
+  setTimeout(()=>{setShowPopoverNotAuth(false)}, 5000)
+},[currentUser, showPopoverNotAuth])
 
 
 
@@ -27,7 +49,7 @@ export const MusicCard = ({name, langEn, description_en, description_ru, image, 
   const [isPlaying, setIsPlaying] = useState(false)  
  
   
-  const [play, { pause, duration, sound }] = useSound(source);
+  const [play, { pause, duration, sound }] = useSound(track_source);
   const [currentTime, setCurrentTime] = useState({
     min: "",
     sec: "",
@@ -76,25 +98,62 @@ export const MusicCard = ({name, langEn, description_en, description_ru, image, 
   // Функция для копирования
   
   const copyOnClick = () => {
-    navigator.clipboard.writeText(source);
+    navigator.clipboard.writeText(track_source);
     setCopied(true);
     setTimeout(()=> {setCopied(false);}, 3000)
     
   }
+// Функция для скачивания
+
+  function downloadTrack(blob, fileName = track_name) {
+    const href = URL.createObjectURL(blob);
+    const a = Object.assign(document.createElement("a"), {
+      href,
+      style: "display:none",
+      download: `${fileName}.mp3`,
+      type:'audio/mpeg'
+    
+    });
+    document.body.appendChild(a);
+    a.click();
+    URL.revokeObjectURL(href);
+    a.remove();
+  }
+
+
+// Фетч для скачивания
+  const downloadOnClick = () => {
+  fetch(track_source,  {headers: {
+    "Content-Type": "audio/mpeg",
+    "Content-Disposition": "attachment"},
+  })
+  .then( res => res.blob() )
+  .then( blob => {
+    downloadTrack(blob)
+  });
+}
+
+
+
 
   return (
-  <div>
-    <div className="music_page_audio_player_container">
+  <div className="music_page_audio_player_container" >
+    <div>
       <div className="music_page_audio_player_wrapper">
+        <div className="music_page_audio_player_edit_wrpapper" >
+          <button className={cn("music_page_audio_player_edit_btn", { ["music_page_audio_player_edit_btn_Visible"]: showEditBtn })} 
+          onMouseEnter={()=>{setShowEditBtn(true)}} 
+          onMouseLeave={()=>{setShowEditBtn(false)}}>{langEn ? 'Edit' : 'Редактировать'}<EditIcon fontSize="14px"/></button>
+        </div>
         <div>
-          <h2 className="music_page_track_title">{name}</h2>
-          {langEn ?  <p className="music_page_track_description">{description_en}</p> 
+          <h3 className="music_page_track_title">{track_name}</h3>
+          {langEn ?  <p className="music_page_track_description">{track_description_en}</p> 
           :
-          <p className="music_page_track_description">{description_ru}</p>}
+          <p className="music_page_track_description">{track_description_ru}</p>}
         </div>
         <img
           className="music_page_audio_image"
-          src={image}
+          src={track_image}
         />
         <div className="player_bottom_container">
           <div>
@@ -139,27 +198,39 @@ export const MusicCard = ({name, langEn, description_en, description_ru, image, 
           </div>
         </div>
           <div className="music_page_player_controls">
+          {/* Попап с требованием авторизоваться, чтобы ставить лайки */}
+          
             <div className="music_page_player_controls_like_wrapper">
               {/* Кнопка с лайком */}
-              <button  className={cn("music_page_player_controls_like_btn", { ["music_page_player_controls_like_btn_Active"]: musicIsLiked })} title={langEn ? 'Like' : 'Нравится'}><ThumbUpOutlinedIcon fontSize="small"/></button>
+              <button onClick={()=>{handleLikeClick()}}  className={cn("music_page_player_controls_like_btn", { ["music_page_player_controls_like_btn_Active"]: musicIsLiked })} title={langEn ? 'Like' : 'Нравится'}><ThumbUpOutlinedIcon fontSize="14px"/></button>
+            
               {/* Количество лайков */}
-              <span className="music_page_player_controls_like_num">{likes?.length}</span>
+              <span className="music_page_player_controls_like_num">{track_likes.length}</span>
             </div>
 
             <div className="music_page_player_controls_btn_copy_wrapper">
+            
             {/* Попап при копировании, исчезает */}
             {copied && <span className="music_player_copied_temp_span">{langEn? 'Copied!' : "Скопировано!"}</span>}
-             {/* Кнопка для копирования ссылки на аудио файл */}
-            <button className="music_page_player_controls_btn_copy" title={langEn ? 'Copy link' : 'Копировать ссылку'} onClick={()=>copyOnClick()}><ContentCopyIcon fontSize="small"/></button>
+            
+            {/* Кнопка для копирования ссылки на аудио файл */}
+            <button className="music_page_player_controls_btn_copy" title={langEn ? 'Copy link' : 'Копировать ссылку'} onClick={()=>copyOnClick()}><ContentCopyIcon fontSize="14px"/></button>
             {/* Кнопка для скачивания */}
-            <Link to={`${source}`} target="_blank">
-              <button title={langEn ? 'Download' : 'Скачать'} className="music_page_player_controls_btn_copy">
-                <DownloadIcon fontSize="small"/>
+            
+              <button onClick={()=>{downloadOnClick()}} title={langEn ? 'Download' : 'Скачать'} className="music_page_player_controls_btn_copy">
+                <DownloadIcon fontSize="14px"/>
               </button>
-            </Link>
+              
             </div>
+            
           </div>
-        
+              {showPopoverNotAuth && 
+            <div className="music_page_player_warn_wrapper">
+              <Link style={{textDecoration: 'none'}} to='/sign-in'>
+              <small className="music_page_player_warn">{
+                langEn ? 'Please, sign in to be able to give likes' : 'Пожалуйста, войдите, чтобы ставить лайки'}</small>
+              </Link>
+            </div>}
       </div>
     </div>
   </div>

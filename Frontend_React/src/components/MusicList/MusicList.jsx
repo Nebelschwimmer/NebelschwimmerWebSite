@@ -1,46 +1,34 @@
-import music_tracks_data from './Music_list.json'
+
 import {MusicCard} from '../MusicCard/MusicCard'
 import './music_track_list.css'
 import { useState, useEffect } from 'react'
 
 
-export const MusicList = ({langEn}) => {
+export const MusicList = ({handleMusicLike, currentUser, trackList, langEn}) => {
 
 
-const [trackList, setTrackList] = useState([]);
 
-
-useEffect(()=> {
-  fetch('http://localhost:3020/music')
-  .then((res)=>res.json())
-  .then((result)=> setTrackList(result.data) )
-}, [])
-console.log(trackList)
 
 
 
   return (
 <div className='track_list_cards'>
-{trackList.length ? 
-trackList?.map((el) => {
+
+{trackList?.map((el) => {
         return (
           <MusicCard
             {...el}
-            name = {el.track_name}
+            track={el}
             key={el.track_id}
-            id={el.track_id}
-            description_en={el.track_description_en}
-            description_ru={el.track_description_ru}
-            image={el.track_image}
-            likes={el.track_likes}
-            comments={el.track_comments}
-            source={el.track_source}
+            handleMusicLike={handleMusicLike}
             langEn={langEn}
+            currentUser={currentUser}
+      
           
           />
         );
-      })
-      : <span>No music added or server connection problems</span>}
+      })}
+  
 </div>
   )
 }

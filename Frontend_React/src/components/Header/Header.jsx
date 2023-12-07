@@ -25,7 +25,7 @@ export const Header = ({langEn, setLangEn, currentUser, onSignOut, user}) => {
   // Стейт для поповера
   const [showPopOver, setShowPopover] = useState(false)
   
-console.log(currentUser)
+
   
   
   // Указываем Реакту, чтобы не показывал поповер, когда пользователь регистрируется либо входит в аккаунт

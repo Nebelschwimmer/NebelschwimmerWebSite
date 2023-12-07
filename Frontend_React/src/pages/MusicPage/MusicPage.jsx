@@ -1,28 +1,20 @@
 import {MusicList} from '../../components/MusicList/MusicList'
-import audio from './Denis1.mp3'
+import { addLikeById } from '../../utils/api_music';
+import './musicPage.css'
+import AddIcon from '@mui/icons-material/Add';
 
-
-export const MusicPage = ({langEn}) => {
+export const MusicPage = ({langEn, trackList, setMusicLiked, handleMusicLike, setTrackList, currentUser}) => {
 
 
 
 
   return (
-    <>
-    {langEn ? <h1 style={{color: 'darkorange'}}>My music</h1> : <h1 style={{color: 'darkorange'}}>Моя музыка</h1>}
-    <button onClick={()=>{}}>Play</button> 
-
-
-
-
-
-    
-    <figure>
-    <figcaption>По просьбе Дениса:</figcaption>
-    <audio  src="http://localhost:3020/public/Denis1.mp3">
-    </audio>
-    </figure>
-<MusicList langEn={langEn}/>
-    </>
+    <div className='music_page_container'>
+      <div  className='music_page_container_title_btn_wrapper'>
+        {langEn ? <h1 className='music_page_title'>My Music</h1> : <h1 className='music_page_title'>Моя музыка</h1>}
+        <button className='music_page_add_btn'>Add New Track<AddIcon/> </button>
+      </div>
+      < MusicList trackList={trackList} handleMusicLike={handleMusicLike} setTrackList={setTrackList} langEn={langEn} setMusicLiked={setMusicLiked} currentUser={currentUser}/>
+    </div>
   )
 }

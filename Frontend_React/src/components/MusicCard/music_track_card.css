@@ -1,15 +1,22 @@
 .music_page_audio_player_container{
-  padding-bottom: 10px;
-  width: 410px;
+  padding-bottom: 20px;
+  width: 360px;
+  height: 590px;
   box-shadow: 3px 3px 6px 3px black;
+  border-radius: 10px;
 
 }
 .music_page_audio_player_wrapper{
-  padding: 25px;
+  padding:30px;
 }
+.music_page_track_title{
+  text-align: center;
+  color: darkorange
+}
+
 .music_page_audio_image {
-height: 310px;
-width: 358px;
+height: 260px;
+width:300px;
 margin-bottom: 1rem;
 border-radius: 10px;
 }
@@ -30,8 +37,10 @@ top: 2px
   padding-right: 7px;
 }
 .music_page_track_description{
-  margin-bottom: 3rem;
-  height: 38px;
+  margin-bottom: 2rem;
+  height: 58px;
+  font-size: 14px;
+  
 }
 .music_page_player_range {
 background-color: rgb(20, 2, 16);
@@ -42,8 +51,7 @@ padding-right: 10px;
 display: flex;
 justify-content: center;
 align-items: center;
-
-}
+} 
 .music_page_player_range_timeline{
   width: 410px;
   margin-left: 10px;
@@ -62,6 +70,7 @@ align-items: center;
   box-shadow: black 1px 1px 1px 1px;
   padding: 5px;
   border-radius: 5px;
+  font-size: 14px;
 }
 .music_page_player_controls_like_btn{
   border: none;
@@ -91,6 +100,7 @@ align-items: center;
   border-radius: 5px;
   transition: ease-in-out 0.2s;
   cursor: pointer;
+  font-size: 14px;
 }
 .music_page_player_controls_btn_copy:hover{
   color: darkorange;
@@ -99,4 +109,49 @@ align-items: center;
   display: flex;
   gap: 10px;
   align-items:center ;
+}
+.music_page_player_warn{
+  color: darkorange;
+  line-height: 20px;
+}
+.music_page_audio_player_edit_wrpapper{
+ display: flex;
+ justify-content: right;
+}
+.music_page_audio_player_edit_btn{
+  background-color: transparent;
+  color: white;
+  border: none;
+  box-shadow: black 1px 1px 1px 1px;
+  padding: 5px;
+  border-radius: 5px;
+  transition: ease-in-out 0.2s;
+  cursor: pointer;
+  font-size: 14px; 
+  opacity: 0.1;
+  display: flex;
+  gap: 1rem;
+}
+.music_page_audio_player_edit_btn_Visible {
+  background-color: transparent;
+  color: white;
+  border: none;
+  box-shadow: black 1px 1px 1px 1px;
+  padding: 5px;
+  border-radius: 5px;
+  transition: ease-in-out 0.2s;
+  cursor: pointer;
+  font-size: 14px;
+  opacity: 1;  
+}
+.music_page_player_warn_wrapper{
+  position: relative;
+  background-color: rgb(64, 33, 96);
+  color: darkorange;
+  border-radius: 10px;
+  padding: 10px;
+  opacity: 0.9;
+  bottom: 47px;
+  width: 290px;
+  font-weight: 600;
 }

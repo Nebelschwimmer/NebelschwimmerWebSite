@@ -7,36 +7,47 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import { MusicPage } from '../../pages/MusicPage/MusicPage';
 import { TextsPage } from '../../pages/TextsPage/TextsPage';
 import { Register } from '../Auth/Register';
-import {getAuth, signOut, GoogleAuthProvider, signInWithPopup, onAuthStateChanged} from 'firebase/auth'
+import {signOut, GoogleAuthProvider, signInWithPopup} from 'firebase/auth'
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase.js";
 import { SignIn } from '../Auth/SignIn.jsx';
 import { UserSettings } from '../Auth/UserSettings.jsx';
 import { ResetPassword } from '../Auth/ResetPassword.jsx';
+import { addLikeById } from '../../utils/api_music.js';
+import { getMusicList } from '../../utils/api_music.js';
+import { deleteMusicLikeById } from '../../utils/api_music.js'; 
 
 
 function App() {
-
-const [langEn, setLangEn] = useState(true);
-const [currentUser, setCurrentUser] = useState('')
-const [showModal, setShowModal] = useState(false);
-
-const navigate = useNavigate()
-
-// Логика для аутентификации
-
-const [user] = useAuthState(auth);
-
-const onSignOut = async () => {
-  await signOut(auth).then(() => {
-    navigate('/');
-    setCurrentUser('')
-  }).catch((error) => {
-    console.log(error)
-  });
-  }
+  // Стейты:
+  // Для изменения языка
+  const [langEn, setLangEn] = useState(true);
+  // Для актуального пользователя
+  const [currentUser, setCurrentUser] = useState('')
+  // Для отображения модального окна
+  const [showModal, setShowModal] = useState(false);
+  // Для музыки
+  const [trackList, setTrackList] = useState([]);
 
 
+  // Функция для навигации
+  const navigate = useNavigate()
+
+  //---- Логика для страницы с аутентификации------
+
+  // Достаем юзера
+  const [user] = useAuthState(auth);
+  
+  // Фунция для выхода из аккаунта
+  const onSignOut = async () => {
+    await signOut(auth).then(() => {
+      navigate('/');
+      setCurrentUser('')
+    }).catch((error) => {
+      console.log(error)
+    });
+    }
+  // Фунция для авторизации через Гугл
   const signInWithGoogle = async () => {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider)
@@ -52,20 +63,42 @@ const onSignOut = async () => {
           const credential = GoogleAuthProvider.credentialFromError(error);
         });
       }
+  // Если пользователь аутентифицирован в Firebase, сетим его извене в стейт фронтенда, иначе возвращаем undefined 
+  useEffect(()=>{
+    if (user !== null) {setCurrentUser(user)}
+    else return
+
+  }, [user])
+  
+  // --------------------------------------
+  
+  //---- Логика для страницы с музыкой------
+
+  // Получаем карточки с музыкой
+  useEffect(()=>{
+    getMusicList().then((result)=>{
+      setTrackList(result.data)
+    })
+  }, [])
 
 
-
-
-
-
-
-useEffect(()=>{
-  if (user !== null) {setCurrentUser(user)}
-  else return
-
-}, [user])
-
-
+// Функция для отправки или удаления лайка музыки по клику.
+// Если лайк поставлен, происходил удаление лайка
+  const handleMusicLike = (track) =>{
+    const trackIsLiked = track?.track_likes?.some((s) => s === currentUser.uid);
+    console.log(trackIsLiked)
+    if (trackIsLiked) {
+        deleteMusicLikeById({user_id: currentUser.uid, track_id: track.track_id}).then((newTrackList)=>{
+        setTrackList(newTrackList)
+        })
+      }
+    else {
+      addLikeById({user_id: currentUser.uid, track_id: track.track_id}).then((newTrackList)=>{
+        setTrackList(newTrackList)
+      })
+    }
+  }
+// --------------------------------------
 return (
   <>
     <Header langEn={langEn} setLangEn={setLangEn} currentUser={currentUser} user={user} onSignOut={onSignOut} />
@@ -73,7 +106,7 @@ return (
 
       <Routes>
         <Route path='/' element={<HomePage langEn={langEn} setLangEn={setLangEn} />}></Route> 
-        <Route path='/music' element={<MusicPage langEn={langEn}/>}></Route>
+        <Route path='/music' element={<MusicPage trackList={trackList} handleMusicLike={handleMusicLike} setTrackList={setTrackList} langEn={langEn} currentUser={currentUser}/>}></Route>
         <Route path='/texts' element={<TextsPage langEn={langEn}/>}></Route>
         <Route path='/register' element={<Register langEn={langEn} currentUser={currentUser} setCurrentUser={setCurrentUser} signInWithGoogle={signInWithGoogle}/>}></Route>
         <Route path='/user-settings' element={<UserSettings showModal={showModal} setShowModal={setShowModal} onSignOut={onSignOut}  currentUser={currentUser} setCurrentUser={setCurrentUser}/>}></Route>

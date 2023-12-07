@@ -83,7 +83,7 @@ async function RegisterWithEmailPassword(email, password) {
     })
     .catch((error) => {
       const errorCode = error.code;
-      if (errorCode === 'auth/email-already-in-use' ) {}
+      if (errorCode === 'auth/email-already-in-use' ) 
       setEmailExists('This email already exists') 
     });
   
