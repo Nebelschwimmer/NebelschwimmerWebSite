@@ -14,29 +14,34 @@ import './spinner.css'
 export const SignIn = ({signInWithGoogle}) => {
 
   // Для навигации
-const navigate = useNavigate()
-// Для формы
-const {register, handleSubmit, formState: { errors }} = useForm({ mode: "onSubmit" });
+  const navigate = useNavigate()
+  // Для формы
+  const {register, handleSubmit, formState: { errors }} = useForm({ mode: "onSubmit" });
 
-// Для отображении ошибки при входе
-const [loginErr, setLoginErr] = useState(false)
+  // Для отображении ошибки при входе
+  const [loginErr, setLoginErr] = useState(false)
 
   // Стейт для спиннера
   const [showSpinner, setShowSpinner] = useState(false);
 
-// Достаем данные пользователя
-const auth = getAuth();
-const user = auth.currentUser;
+  // Если ошибка при входе, не показывать спиннер
+  useEffect(()=>{
+    if (loginErr)
+    setShowSpinner(false)
+  },[loginErr])
+  
+  // Достаем данные пользователя
+  const auth = getAuth();
 
-// При входе через аккаунт гугл
-const onSignInWithGoogle = () => {
-  signInWithGoogle();
-  navigate('/')
-}
-// Функция для вход по почте и паролю
-const SingInWithEmailAndPassword = async (email, password) => {
 
-  await signInWithEmailAndPassword(auth, email, password)
+  // При входе через аккаунт гугл
+  const onSignInWithGoogle = () => {
+    signInWithGoogle();
+    navigate('/')
+  }
+  // Функция для вход по почте и паролю
+  const SingInWithEmailAndPassword = async (email, password) => {
+    await signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;
     }).then(()=>{navigate('/')})
@@ -71,7 +76,7 @@ const passwordRegister = register("password", {
   })
 
 
-// Фунция для отправик данных
+// Фунция для отправки данных
 const sendSignInData = async (data) => {
   try {
     setShowSpinner(true);

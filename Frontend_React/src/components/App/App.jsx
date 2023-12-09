@@ -86,7 +86,7 @@ function App() {
 // Если лайк поставлен, происходил удаление лайка
   const handleMusicLike = (track) =>{
     const trackIsLiked = track?.track_likes?.some((s) => s === currentUser.uid);
-    console.log(trackIsLiked)
+    
     if (trackIsLiked) {
         deleteMusicLikeById({user_id: currentUser.uid, track_id: track.track_id}).then((newTrackList)=>{
         setTrackList(newTrackList)
@@ -106,7 +106,7 @@ return (
 
       <Routes>
         <Route path='/' element={<HomePage langEn={langEn} setLangEn={setLangEn} />}></Route> 
-        <Route path='/music' element={<MusicPage trackList={trackList} handleMusicLike={handleMusicLike} setTrackList={setTrackList} langEn={langEn} currentUser={currentUser}/>}></Route>
+        <Route path='/music' element={<MusicPage showModal={showModal} setShowModal={setShowModal} trackList={trackList} handleMusicLike={handleMusicLike} setTrackList={setTrackList} langEn={langEn} currentUser={currentUser}/>}></Route>
         <Route path='/texts' element={<TextsPage langEn={langEn}/>}></Route>
         <Route path='/register' element={<Register langEn={langEn} currentUser={currentUser} setCurrentUser={setCurrentUser} signInWithGoogle={signInWithGoogle}/>}></Route>
         <Route path='/user-settings' element={<UserSettings showModal={showModal} setShowModal={setShowModal} onSignOut={onSignOut}  currentUser={currentUser} setCurrentUser={setCurrentUser}/>}></Route>

@@ -135,17 +135,8 @@ align-items: center;
   display: flex;
   gap: 1rem;
 }
-.music_page_audio_player_edit_btn_Visible {
-  background-color: transparent;
-  color: white;
-  border: none;
-  box-shadow: black 1px 1px 1px 1px;
-  padding: 5px;
-  border-radius: 5px;
-  transition: ease-in-out 0.2s;
-  cursor: pointer;
-  font-size: 14px;
-  opacity: 1;  
+.music_page_audio_player_edit_btn:hover{
+  opacity: 1;
 }
 .music_page_player_warn_wrapper{
   position: relative;

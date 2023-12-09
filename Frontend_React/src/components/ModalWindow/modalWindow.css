@@ -33,8 +33,7 @@
 
 .modal_content.active {
   transform: scale3d(1, 1, 1);
-  position: absolute;
-  top:317px;
+
 }
 
 .modal_top{

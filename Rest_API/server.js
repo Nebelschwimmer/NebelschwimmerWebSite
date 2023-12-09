@@ -4,55 +4,74 @@ const app = express();
 const PORT = 3020;
 const bodyParser = require('body-parser')
 const fs = require('fs');
+const fileupload = require('express-fileupload');
+
+  app.use(express.json());
+
+  // Использование CORS
+  app.use(cors())
+  // Используем заголовок для CORS
+  app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Content-Type', 'application/json');
+    next();
+  });
+
+  // Использование bodyParser json
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }))
+
+  // GET для json с музыкой
+  const trackList = require('./trackList.json');
+  app.get('/music', (req, res) => {
+  res.status(200).json({ data: trackList });
+  });
 
 
-app.use(express.json());
+// Для закачки муз. файла на сервер
+app.use(
+  fileupload({
+    createParentPath: true,
+  })
+);
 
-// Использование CORS
-app.use(cors())
-// Используем заголовок для CORS
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Content-Type', 'application/json');
-  next();
+app.post('/music/upload', async (req, res) => {
+  try {
+    if (!req.files) {
+      res.send({
+        status: 'failed',
+        message: 'No file',
+      });
+    } else {
+      let file = req.files.file;
+      console.log(req.files);
+      file.mv('./public/' + file.name);
+      res.send({
+        status: 'success',
+        message: 'File successfully uploaded',
+        data: {
+          name: file.name,
+          mimetype: file.mimetype,
+          size: file.size,
+        },
+      });
+    }
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
-// Использование bodyParser json
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }))
-// GET для json с музыкой
-const trackList = require('./trackList.json');
-app.get('/music', (req, res) => {
-res.json({ data: trackList });
-});
 
+  // GET для json с текстами
+  const textsList = require('./texts.json');
+  app.get('/texts', (req, res) => {
+  res.status(200).json({ data: textsList });
+  });
 
-// GET для json с текстами
-const textsList = require('./texts.json');
-app.get('/texts', (req, res) => {
-res.json({ data: textsList });
-});
-
-
-// Читаем JSON
-
-
- // -----CДЕЛАТЬ ОТДЕЛЬНЫЙ ЭНДПОИНТ ДЛЯ РЕДАКТИРОВАНИЯ МУЗ. КАРТОЧКИ ПО ДАННЫМ ИЗ ФОРМЫ-------
-  // Забираем из запроса имя трэка
-  // const trackNameOutside = bodyOutsideData.track_name;
-  // Изменяем имя трэка по данным запроса
-  // Пробегаемся по массиву: если id в исходном массиве и из тела запроса совпадают, изменяем имя трэка 
-  // на то, что пришло из запроса 
-  // musicArrayParsed.forEach(e => {
-  // if (e.track_id === trackIdFromOutside)
-  // e.track_name = trackNameOutside
-  // });
-
-
-
+ 
 // ----------PATCH для добавления лайка-------------
 
-app.patch('/music/likes', (req, res) => {
+app.patch(`/music/likes/`, (req, res) => {
   const readMusicJson = fs.readFileSync("./trackList.json", "utf8")  
   // Тело запроса
   const bodyOutsideData = req.body;
@@ -73,9 +92,14 @@ app.patch('/music/likes', (req, res) => {
   // Перезаписываем JSON
   fs.writeFileSync('./trackList.json', updatedMusicArray);
   const readUpdatedMusicJson = fs.readFileSync("./trackList.json", "utf8") 
+
   // Отправляем ответ с обновленным JSON
-    res.send(readUpdatedMusicJson);
+    res.status(200).send(readUpdatedMusicJson);
 })
+
+
+
+
 
 // ----------DELETE для удаления лайка-------------
 
@@ -110,19 +134,15 @@ app.delete('/music/likes', (req, res) => {
   fs.writeFileSync('./trackList.json', updatedMusicArray);
   const readUpdatedMusicJson = fs.readFileSync("./trackList.json", "utf8") 
   // Отправляем ответ с обновленным JSON
-    res.send(readUpdatedMusicJson);
+    res.status(200).send(readUpdatedMusicJson);
 })
 
 // Открываем доступ к файлам из папки public
 app.use('/public', express.static(`${__dirname}/public`));
 
-// Для скачивания
-app.get('music//download', function(req, res){
-  const bodyOutsideData = req.body;
-  const trackSource = bodyOutsideData.track_source;
-  const trackToDownload = `${__dirname}/public/${trackSource}`;
-  res.download(trackToDownload);
-});
+
+
+
 
 
 // Слушаем заданный порт

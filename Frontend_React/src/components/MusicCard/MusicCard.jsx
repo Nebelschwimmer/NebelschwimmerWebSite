@@ -16,21 +16,16 @@ export const MusicCard = ({track_name, track, langEn, track_description_en, hand
   // Стейт для попапа о том, что нужно авторизоваться
   const [showPopoverNotAuth, setShowPopoverNotAuth] = useState(false)
   // Стейт для изменения класса кнопки с редактированием
-  const [showEditBtn, setShowEditBtn] = useState(false)
-  // Стейт для изменения класса кнопки для копирования
-  const [showCopyBtn, setShowCopyBtn] = useState(false)
-    // Стейт для изменения класса кнопки для скачивания
-    const [showDownloadBtn, setShowDownloadBtn] = useState(false)
 
-
+    const [copied, setCopied] = useState(false)
 
 
 
   // Чтобы отлайканные актуальный юзером карточки меняли цвет лайка на оранжевый, а при снятии лайка - обратно становились белыми  
   useEffect(()=> {
     if (track_likes?.some((s) => s === currentUser.uid))
-    setMusicIsLiked(true);
-  else setMusicIsLiked(false);
+      setMusicIsLiked(true);
+    else setMusicIsLiked(false);
   }, [track_likes, currentUser])
   
 
@@ -38,7 +33,7 @@ export const MusicCard = ({track_name, track, langEn, track_description_en, hand
 const handleLikeClick = () => {
   if (currentUser !== '')
   {handleMusicLike(track);
-    setShowPopoverNotAuth(false)}
+  setShowPopoverNotAuth(false)}
   
   else setShowPopoverNotAuth(true)
 } 
@@ -60,7 +55,7 @@ useEffect(()=>{
     sec: "",
   });
   const [seconds, setSeconds] = useState(0);
-  const [copied, setCopied] = useState(false)
+ 
   
   const playingButton = () => {
     if (isPlaying) {
@@ -114,7 +109,7 @@ useEffect(()=>{
     const href = URL.createObjectURL(blob);
     const a = Object.assign(document.createElement("a"), {
       href,
-      style: "display:none",
+      style: "display: none",
       download: `${fileName}.mp3`,
       type:'audio/mpeg'
     
@@ -219,31 +214,24 @@ useEffect(()=>{
               {/* Попап при копировании, исчезает */}
               <span className={cn("music_player_copied_temp_span", {["music_player_copied_temp_span_Active"]: copied})} > {langEn? 'Copied!' : "Скопировано!"}</span>
               
-              <button className={cn("music_page_audio_player_edit_btn", { ["music_page_audio_player_edit_btn_Visible"]: showEditBtn })} 
-                title={langEn ? 'Edit' : 'Редактировать'}
-                onMouseEnter={()=>{setShowEditBtn(true)}} 
-                onMouseLeave={()=>{setShowEditBtn(false)}}><EditIcon fontSize="14px"/>
+              {/* Кнопка для редактирования */}
+              <button className="music_page_audio_player_edit_btn"
+                title={langEn ? 'Edit' : 'Редактировать'}><EditIcon fontSize="14px"/>
               </button>
-
-
               
               {/* Кнопка для копирования ссылки на аудио файл */}
-              <button className={cn("music_page_audio_player_edit_btn", { ["music_page_audio_player_edit_btn_Visible"]: showCopyBtn })}  
-              title={langEn ? 'Copy link' : 'Копировать ссылку'} 
-              onMouseEnter={()=>{setShowCopyBtn(true)}} 
-              onMouseLeave={()=>{setShowCopyBtn(false)}}
-              onClick={()=>copyOnClick()}><ContentCopyIcon fontSize="14px"/></button>
+              <button className="music_page_audio_player_edit_btn"
+              onClick={()=>{copyOnClick()}}
+              title={langEn ? 'Copy link' : 'Копировать ссылку'} ><ContentCopyIcon fontSize="14px"/></button>
+              
               {/* Кнопка для скачивания */}
-            
               <button 
-              className={cn("music_page_audio_player_edit_btn", { ["music_page_audio_player_edit_btn_Visible"]: showDownloadBtn })}
-              onMouseEnter={()=>{setShowDownloadBtn(true)}} 
-              onMouseLeave={()=>{setShowDownloadBtn(false)}}
+              className="music_page_audio_player_edit_btn"
               onClick={()=>{downloadOnClick()}} title={langEn ? 'Download' : 'Скачать'} >
                 <DownloadIcon fontSize="14px"/>
               </button>
               
-              </div>
+            </div>
             
           </div>
               {showPopoverNotAuth && 

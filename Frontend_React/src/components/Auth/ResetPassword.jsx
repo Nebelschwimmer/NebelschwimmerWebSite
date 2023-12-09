@@ -13,24 +13,32 @@ import {sendPasswordResetEmail } from 'firebase/auth'
 
 
 export const ResetPassword = () => {
-const navigate = useNavigate()
+  const navigate = useNavigate()
 
-const {register, handleSubmit, formState: { errors }} = useForm({ mode: "onSubmit" });
+  const {register, handleSubmit, formState: { errors }} = useForm({ mode: "onSubmit" });
 
-const auth = getAuth()
-auth.languageCode = 'ru';
+  const auth = getAuth()
+  auth.languageCode = 'en';
 
 
-const sendResetPasswordData = async (data) => {
-  try {
-    await sendPasswordResetEmail(auth, data.email)
-    .then(data =>{alert('Reminder sent!');})
-    .then(()=>{navigate('/sign-in')});
+  const sendResetPasswordData = async (data) => {
+    try {
+      await sendPasswordResetEmail(auth, data.email)
+      .then(data =>{alert('Reminder sent!');})
+      .then(()=>{navigate('/sign-in')});
+    }
+    catch(errors) {
+  console.log(errors)
+    } 
   }
-  catch(errors) {
-console.log(errors)
-  } 
-}
+
+  const emailRegister = register("email", {
+    required: "Email required",
+    pattern: {
+      message: "Incrorrect email!",
+      value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+    }
+  });
 
 
   return (
@@ -50,9 +58,13 @@ console.log(errors)
                     <input 
                       className='auth_input' 
                       type='email'
-                      {...register("email", { required: true })} 
+                      {...emailRegister} 
                     >
                     </input>
+                    {/* Текст при ошибках email*/}
+                    { errors?.email  &&
+                      <small className='auth_small'>{errors.email?.message}</small>
+                    }
                 </div>
                 <span>A reset link will be sent to your e-mail box.</span>
                 <span>Check it, then sign in with the new password</span>

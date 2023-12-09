@@ -35,13 +35,18 @@ export const deleteMusicLikeById = (body) => {
   }).then((res) => onResponse(res));
 }
 
-export const downloadMusicById = (trackName) => {
-  
-  return fetch(`/music/download/${trackName}`, {
+
+
+export const addNewTrack = (data) => {
+  console.log(data)
+  return fetch('http://localhost:3020/music/upload', {
     headers: {
-      "content-type": "application/json"
+      "Access-Control-Allow-Origin": "*",
+      "content-type": "audio/mpeg"
     },
-    method: "GET"
-  }).then((res) => onResponse(res));
-  
+    method: "POST",
+    body: JSON.stringify(data)
+  }).then((res) => {onResponse(res)
+ 
+})
 }

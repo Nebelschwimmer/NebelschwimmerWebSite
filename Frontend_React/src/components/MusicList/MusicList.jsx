@@ -1,14 +1,10 @@
 
 import {MusicCard} from '../MusicCard/MusicCard'
 import './music_track_list.css'
-import { useState, useEffect } from 'react'
+
 
 
 export const MusicList = ({handleMusicLike, currentUser, trackList, langEn}) => {
-
-
-
-
 
 
   return (
@@ -23,8 +19,6 @@ export const MusicList = ({handleMusicLike, currentUser, trackList, langEn}) => 
             handleMusicLike={handleMusicLike}
             langEn={langEn}
             currentUser={currentUser}
-      
-          
           />
         );
       })}
