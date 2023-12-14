@@ -9,15 +9,21 @@ import DownloadIcon from '@mui/icons-material/Download';
 import cn from 'classnames'
 import EditIcon from '@mui/icons-material/Edit';
 import { Link } from "react-router-dom";
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { deleteTrackByID } from "../../utils/api_music";
+import { ModalWindow } from "../ModalWindow/ModalWindow";
 
-export const MusicCard = ({track_name, track, langEn, track_description_en, handleMusicLike, track_id, currentUser, track_description_ru, track_image, track_source, track_likes }) => {
+
+export const MusicCard = ({track_name, track, langEn, trackList, setTrackList, track_description_en, handleMusicLike, track_id, currentUser, track_description_ru, track_image, track_source, track_likes }) => {
   // Стейт для лайков
   const [musicIsLiked, setMusicIsLiked] = useState(false)
   // Стейт для попапа о том, что нужно авторизоваться
   const [showPopoverNotAuth, setShowPopoverNotAuth] = useState(false)
   // Стейт для изменения класса кнопки с редактированием
+  const [copied, setCopied] = useState(false)
 
-    const [copied, setCopied] = useState(false)
+  const [showModalDelete, setShowModalDelete] = useState(false)
+
 
 
 
@@ -134,6 +140,13 @@ useEffect(()=>{
 }
 
 
+// Для удаления карточки
+const deleteMusicCard = async (track_id) => {
+  await deleteTrackByID(track_id)
+  const newTrackList = trackList.filter(f => f.track_id !== track_id)
+  setTrackList(newTrackList)
+}
+
 
 
   return (
@@ -141,8 +154,29 @@ useEffect(()=>{
     <div>
       <div className="music_page_audio_player_wrapper">
         <div className="music_page_audio_player_edit_wrpapper" >
-        
+        <span onClick={()=>{setShowModalDelete(true)}} title="Delete" className="music_page_audio_player_delete_icon"><DeleteOutlineIcon/></span>
         </div>
+        
+                {/* Модальное окно с подтверднением выхода из аккаунта */}
+                {!!showModalDelete &&
+                    
+                    <div className={cn("modal", { ["active"]: showModalDelete })} onClick={()=>{setShowModalDelete(false)}}>
+                      <div className={cn("modal_content", { ["active"]: showModalDelete })}  onClick={(e) => e.stopPropagation()}>
+                          <div className='modal_top'>
+                            <h3 style={{color:'darkorange'}}>Are you sure?</h3>
+                          </div>
+                          <div className='modal_btns_wrapper'>
+                            <button onClick={()=>{deleteMusicCard(track_id)}} className='modal_btn_warn'>Delete Track</button>
+                            <button onClick={()=>{setShowModalDelete(false)}} className='modal_btn'>Cancel</button>
+                        </div>
+                      </div>
+                  </div>
+                  }
+
+
+
+
+
         <div>
           <h3 className="music_page_track_title">{track_name}</h3>
           {langEn ?  <p className="music_page_track_description">{track_description_en}</p> 

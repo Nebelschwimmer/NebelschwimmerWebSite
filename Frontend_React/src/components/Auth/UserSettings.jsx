@@ -35,12 +35,12 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
   
   
   // Таймаут для спиннера
-    useEffect(()=>{
-      setTimeout(()=>{
-      if (showSpinner) setShowSpinner(false)
-      },500)
-    }, 
-    [showSpinner])
+    // useEffect(()=>{
+    //   setTimeout(()=>{
+    //   if (showSpinner) setShowSpinner(false)
+    //   },500)
+    // }, 
+    // [showSpinner])
 
     // Таймаут для надписи с ошибкой
     useEffect(()=>{

@@ -162,3 +162,10 @@ align-items: center;
   font-size: 12px;
   opacity: 0.8;
 }
+.music_page_audio_player_delete_icon{
+  opacity: 0.05;
+  cursor: pointer;
+}
+.music_page_audio_player_delete_icon:hover{
+  opacity: 0.5
+}

@@ -1,10 +1,10 @@
 
 import {MusicCard} from '../MusicCard/MusicCard'
 import './music_track_list.css'
+import { deleteTrackByID } from '../../utils/api_music'
 
 
-
-export const MusicList = ({handleMusicLike, currentUser, trackList, langEn}) => {
+export const MusicList = ({handleMusicLike, setTrackList, currentUser, trackList, langEn}) => {
 
 
   return (
@@ -19,6 +19,9 @@ export const MusicList = ({handleMusicLike, currentUser, trackList, langEn}) => 
             handleMusicLike={handleMusicLike}
             langEn={langEn}
             currentUser={currentUser}
+            trackList={trackList}
+            setTrackList={setTrackList}
+          
           />
         );
       })}

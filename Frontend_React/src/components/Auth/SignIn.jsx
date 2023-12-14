@@ -3,8 +3,8 @@ import GoogleIcon from '@mui/icons-material/Google';
 import { useNavigate, Link } from 'react-router-dom';
 import { Backbutton } from '../BackButton/BackButton';
 import { useState, useEffect } from 'react';
-import { getAuth, } from 'firebase/auth';
-import { useForm, } from "react-hook-form";
+import { getAuth } from 'firebase/auth';
+import { useForm } from "react-hook-form";
 import {signInWithEmailAndPassword } from 'firebase/auth'
 import './spinner.css'
 

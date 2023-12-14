@@ -59,9 +59,10 @@ display: flex;
 .add_music_choose_image_btn_wrapper{
   display: flex;
   gap: 1rem;
-  align-items: flex-end;
-
-  justify-content: space-between;
+  
+  flex-direction: column;
+  
+  
 }
 .add_music_add_track_btn{
     width: 120px;
@@ -133,4 +134,15 @@ color: darkorange;
 }
 .add_music_add_track_input{
   display: none;
+}
+.add_music_add_track_container{
+  border: 1px solid gray;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+.add_music_send_file_btn_wrapper{
+  display: flex;
+  justify-content: center;
+  
 }

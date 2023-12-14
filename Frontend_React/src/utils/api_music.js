@@ -9,7 +9,7 @@ const onResponse = (res) => {
 export const addLikeById = (body) => {
   return fetch('http://localhost:3020/music/likes/', {
     headers: {
-      "content-type": "application/json"
+      "Content-Type": "application/json"
     },
     method: "PATCH",
     body: JSON.stringify(body)
@@ -19,7 +19,7 @@ export const addLikeById = (body) => {
 export const getMusicList = () => {
   return fetch('http://localhost:3020/music/', {
     headers: {
-      "content-type": "application/json"
+      "Content-Type": "application/json"
     },
     method: "GET",
   }).then((res) => onResponse(res));
@@ -28,7 +28,7 @@ export const getMusicList = () => {
 export const deleteMusicLikeById = (body) => {
   return fetch('http://localhost:3020/music/likes/', {
     headers: {
-      "content-type": "application/json"
+      "Content-Type": "application/json"
     },
     method: "DELETE",
     body: JSON.stringify(body)
@@ -37,16 +37,26 @@ export const deleteMusicLikeById = (body) => {
 
 
 
-export const addNewTrack = (data) => {
-  console.log(data)
-  return fetch('http://localhost:3020/music/upload', {
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "content-type": "audio/mpeg"
-    },
-    method: "POST",
-    body: JSON.stringify(data)
-  }).then((res) => {onResponse(res)
+export const addNewTrack = (formData) => {
  
-})
+  return fetch('http://localhost:3020/music/upload', {
+    // headers: {
+    //   "Content-Type": "multipart/form-data"
+    // },
+    method: "POST",
+    body: formData,
+    
+  }).then((res) => onResponse(res));
+}
+
+export const deleteTrackByID = (track_id) => {
+ 
+  return fetch('http://localhost:3020/music/delete', {
+    headers: {
+      "Content-Type": "application/json"
+    },
+    method: "DELETE",
+    body: JSON.stringify({track_id: track_id})
+    
+  }).then((res) => onResponse(res));
 }
