@@ -3,14 +3,19 @@ import '../musicPage.css'
 import { addNewTrack } from "../../../utils/api_music";
 import { useState, useEffect } from "react";
 import { useId } from 'react';
+import cn from "classnames";
+
+
 
 export const AddMusicForm = ({langEn, setShowModal, trackList, setTrackList}) => {
 
   // Для генерации случайного id
 const track_id = useId()
 // Стейты для показа информации о файле
-const [showFileName, setShowFileName] = useState(undefined)
-const [showFileSize, setShowFileSize] = useState(undefined)
+const [showFileName, setShowFileName] = useState('')
+const [showFileSize, setShowFileSize] = useState('')
+const [fileSizeError, setFileSizeError] = useState('')
+const [disableBtn, setDisableButton] = useState(false)
 // Стейт для активной кнопки для 2-й формы
 
 
@@ -28,9 +33,22 @@ const {
 // Для отображения инфо о файле 
 
 const onFileAdding = (e) => {
-  setShowFileName(e.target.files[0].name);
-  setShowFileSize(((e.target.files[0].size) / 1048576 ).toFixed(2) +' Mb')
+  const findFile = e.target.files[0]
+  
+  if (findFile.name.length > 50) {
+    setShowFileName(findFile.name.substring(0, 43) + '...' + ',') 
+  }
+  else setShowFileName(findFile.name + ',');
+
+  setShowFileSize((findFile.size / 1048576 ).toFixed(2) +' MB')
+  if (findFile.size > 1e+7 ) setFileSizeError('This file is too big! It must not exceed 20 MB!')
+  else (setFileSizeError(''))
 };
+
+useEffect(()=>{
+  if (fileSizeError) setDisableButton(true)
+  else setDisableButton(false)
+})
 
 // Для отправки данных
 const onSubmitData = async (data) => {
@@ -46,21 +64,17 @@ const onSubmitData = async (data) => {
     }
   }
 
-  await addNewTrack(formData).then((newTrack)=> {
-    setTrackList([...trackList, newTrack]);
-    setShowModal(false)
-  })
+  try {
+    await addNewTrack(formData).then((newTrack)=> {
+      setTrackList([...trackList, newTrack]);
+      setShowModal(false)
+    })
+  }
+  catch (err) {console.log(err)}
   
 }
 
-  // Если юзер не задал фото в форме добавления трэка, делаем ссылку на дефолтную картинку
-  useEffect(()=>{
-    trackList.map((e) => {
-      if (e.track_image === '')
-      e.track_image = 'https://img.freepik.com/premium-photo/neon-flat-musical-note-icon-3d-rendering-ui-ux-interface-element-dark-glowing-symbol_187882-2481.jpg?size=626&ext=jpg'
-      } 
-    )
-  },[trackList])
+
 
 
   return (
@@ -73,6 +87,7 @@ const onSubmitData = async (data) => {
           <section className="add_music_add_track_container">
               <div className="add_music_choose_image_wrapper">
                 <span style={{fontWeight:'600'}}>Сhoose audio file <span className='auth_req'> *</span></span>
+                <small style={{color:'darkorange'}}>Your file must be in .mp3 extension and not exceed 20 MB</small>
                 <div className="add_music_choose_image_btn_wrapper">
                   <label className="add_music_add_track_btn">
                     Add file
@@ -81,72 +96,80 @@ const onSubmitData = async (data) => {
                     {...register("file")}
                     className="add_music_add_track_input"
                     onInput={onFileAdding}
+                    accept="audio/mpeg"
                     >
                     </input>
                   </label>
                   <small>{showFileName} {showFileSize}</small>
+                  <span style={{color:'darkorange', fontWeight: 600}}>{fileSizeError}</span>
                   </div>
-                    <small style={{color:'darkorange'}}>Permited formats: .mp3, .mpeg</small>
+                    
                   <div className="add_music_send_file_btn_wrapper">
-                    {/* <button type="submit" className="add_music_create_btn">Send</button> */}
+                  
                   </div>
               </div>
-            {/* </form> */}
+          
           </section>
         
         {/* Для добавления имени, описания и пр. */}
 
-        
-        <section className="add_music_form_wrapper_right">
-          <div>
+        <section className="add_music_form_bottom">
+          
             {/* <form  onSubmit={handleSubmit(sendNewTrackData)} className="add_music_form">  */}
             
               {/* Инпут для имени */}
-              <div className='auth_label_input'>
-                <label className='add_music_input_label'>{langEn ? 'Name :' : 'Название :'}<span className='auth_req'> *</span></label> 
-                  <input 
-                  className='add_music_input' 
-                  {...register("track_name", { required: true })}
-                  type='text'
-                  maxLength={23}
-                  >
-                  </input>
-              </div>
-              {/* Инпут для описания на англ. */}
-              {langEn ?
+            <div>
+              <div className="add_music_inputs">
                 <div className='auth_label_input'>
-                  <label className='add_music_input_label'>Description :</label> 
+                  <label className='add_music_input_label'>{langEn ? 'Name :' : 'Название :'}<span className='auth_req'> *</span></label> 
                     <input 
                     className='add_music_input' 
-                    {...register("track_description_en", { required: false })}
+                    {...register("track_name", { required: true })}
                     type='text'
+                    maxLength={23}
                     >
                     </input>
                 </div>
-                :
-                 // Инпут для описания на русс. 
-                <div className='auth_label_input'>
-                  <label className='add_music_input_label'>Описание : </label> 
-                    <input 
-                    className='add_music_input' 
-                    type='text'
-                    {...register("track_description_ru", { required: false })}
-                    >
-                    </input>
-                </div>
-              }
-                {/* Инпут для картинки */}
-                <div className='auth_label_input'>
-                    <label className='add_music_input_label'>Image URL :</label> 
-                      <input 
-                      className='add_music_input' 
-                      type='url'
-                      {...register("track_image", { required: false })}
+                {/* Textarea для описания на англ. */}
+              
+                  <div className='auth_label_input'>
+                    <label className='add_music_input_label'>Description (En) :</label> 
+                      <textarea 
+                      className='add_music_textarea' 
+                      {...register("track_description_en", { required: false })}
+                      
+                      maxLength={100}
                       >
-                      </input>
-                </div>
+                    
+                      </textarea>
+                  </div>
+                
+                  {/* Textarea для описания на русс.  */}
+                  <div className='auth_label_input'>
+                    <label className='add_music_input_label'>Description (Ru) : </label> 
+                      <textarea 
+                      className='add_music_textarea' 
+                      type='text'
+                      {...register("track_description_ru", { required: false })}
+                      >
+                      </textarea>
+                  </div>
+            
+                  {/* Инпут для картинки */}
+                  <div className='auth_label_input'>
+                      <label className='add_music_input_label'>Image URL :</label> 
+                        <input 
+                        className='add_music_input' 
+                        type='url'
+                        {...register("track_image", { required: false })}
+                        >
+                        </input>
+                  </div>
+              </div>
                 <div className="add_music_create_btn_wrapper">
-                  <button type="submit" className="add_music_create_btn">Create New Track</button>
+                  <button disabled={disableBtn} type="submit" 
+                  className={cn("add_music_create_btn", { ["add_music_create_btn_Disabled"]: disableBtn })}
+                  >Create New Track</button>
                 </div>
               </div>
               

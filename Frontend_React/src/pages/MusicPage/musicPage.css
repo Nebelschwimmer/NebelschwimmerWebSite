@@ -39,7 +39,8 @@ display: flex;
 .add_music_input_label{
   font-size: 16px;
 }
-.add_music_input {  height: 2rem;
+.add_music_input {  
+  height: 2rem;
   width: 280px;
   font-size: 18px;  
   border-radius: 10px;
@@ -50,8 +51,21 @@ display: flex;
   background-color: transparent;
   color: white;
 }
+
+.add_music_textarea{
+  min-height: 4rem;
+  width: 280px;
+  font-size: 14px;  
+  border-radius: 10px;
+  outline-color: rgb(42, 3, 78);
+  padding-left: 20px;
+  padding-right: 20px;
+  border: 1px white solid;
+  background-color: transparent;
+  color: white;
+}
 .add_music_choose_image_wrapper{
- margin-top: 2rem;
+ 
   display: flex;
   flex-direction: column;
   gap: 1rem
@@ -92,16 +106,6 @@ display: flex;
   margin-top: 2rem;
 }
 
-.add_music_drop_area{
-  height: 80px;
-  width: 100%;
-  font-size: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px dashed rgb(91, 91, 91);
-  border-radius: 10px;
-}
 .add_music_title{
   text-align: center;
   color: darkorange;
@@ -123,6 +127,24 @@ display: flex;
   box-shadow: black 1px 1px 1px 1px;
   border: none;   
 }
+.add_music_create_btn_Disabled {
+  width: 160px;  
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: rgb(39, 32, 46);
+  color: white;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: 0.2s ease-in-out;
+  box-shadow: black 1px 1px 1px 1px;
+  border: none;    
+}
+
+
 .add_music_create_btn:hover{
 color: darkorange;
 }
@@ -144,5 +166,9 @@ color: darkorange;
 .add_music_send_file_btn_wrapper{
   display: flex;
   justify-content: center;
-  
+}
+.add_music_inputs{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem
 }
