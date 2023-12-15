@@ -51,7 +51,8 @@ app.use(
   fileupload({
     createParentPath: true,
     uriDecodeFileNames: true,
-    safeFileNames: true
+    
+    limits: { fileSize: 10 * 1024 * 1024 },
   })
 );
 
@@ -64,10 +65,10 @@ app.use(
 app.post('/music/upload', (req, res) => {
   try {
     // Если в запросе нет файла
-    if (!req.files) {
+    if (!req.files || req.files.file.size > 10 * 1024 * 1024) {
       res.send({
         status: 'Failed',
-        message: 'File not found',
+        message: 'File not found or its size is too big',
       });
     } 
     // Если файл на месте
@@ -95,7 +96,7 @@ app.post('/music/upload', (req, res) => {
       // Записываем в json
       fs.writeFileSync('./trackList.json', updatedMusicArray);
       // Переводим объект с новым треком в json
-      const resp = JSON.stringify(newTrack)
+      const resp = JSON.stringify(newTrack, undefined, 2)
       // Отправляем ответ
       res.status(200).send(resp);
       
