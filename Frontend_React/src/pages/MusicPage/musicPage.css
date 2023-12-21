@@ -55,7 +55,7 @@ display: flex;
 .add_music_textarea{
   min-height: 4rem;
   width: 280px;
-  font-size: 14px;  
+  font-size: 16px;  
   border-radius: 10px;
   outline-color: rgb(42, 3, 78);
   padding-left: 20px;
@@ -63,6 +63,7 @@ display: flex;
   border: 1px white solid;
   background-color: transparent;
   color: white;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 .add_music_choose_image_wrapper{
  
@@ -80,7 +81,6 @@ display: flex;
 }
 .add_music_add_track_btn{
     width: 120px;
-
     height: 2rem;
     display: flex;
     align-items: center;

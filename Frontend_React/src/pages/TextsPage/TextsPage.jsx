@@ -2,21 +2,31 @@ import './textPage.css'
 import textsData from './texts.json'
 import {TextCard} from '../../components/TextCard/TextCard'
 import { useState, useEffect, useRef } from 'react'
+import { ModalWindow } from '../../components/ModalWindow/ModalWindow'
+import {AddTextPage} from './AddTextPage/AddTextPage'
+import { useNavigate } from 'react-router-dom'
 
 
-export const TextsPage = ({langEn}) => {
-  const [texts, setTexts] = useState([]);
 
-
+export const TextsPage = ({langEn, texts, setTexts, currentUser, showModal, setShowModal}) => {
+ 
+const navigate = useNavigate()
 
 
   useEffect(()=>{ 
-    fetch('http://localhost:3020/texts').then((response) => response.json()).then((res) => {
-      setTexts(res.data);
+    fetch('http://localhost:3020/textsTest', {
+      headers: {
+      "Content-Type": "application/json"
+      }
+    }
+    )
+    .then((response) => response.json())
+    .then((res) => {
+      setTexts(res);
     });
 }, [])
 
-console.log(texts.map(e=>e.text_url))
+
 
 
 
@@ -24,6 +34,7 @@ console.log(texts.map(e=>e.text_url))
   return (
     <div>
       <h1 style={{color:'darkorange'}}>My texts</h1>
+      <button onClick={()=>{navigate('/texts/add-text')}}>Add New Text</button>
       <h3>Contents:</h3>
       <p>Bored</p>
       <p>Ghosts of Sorrow</p>
@@ -32,16 +43,14 @@ console.log(texts.map(e=>e.text_url))
         return (
           <TextCard
             {...el}
-            name = {el.text_name}
-            key={el.text_id}
-            id={el.text_id}
-            description_en={el.text_description_en}
-            description_ru={el.text_description_ru}
-            likes={el.text_likes}
-            content_en={el.text_content_en}
-            content_ru={el.text_content_ru}
+            text={el}
+            key={el._id}
+            content_en={el.content_en}
+            content_ru={el.content_ru}
             langEn={langEn}
-            text_url={el.text_url}
+            currentUser={currentUser}
+            texts={texts}
+            setTexts={setTexts}
           />
         );
       })}

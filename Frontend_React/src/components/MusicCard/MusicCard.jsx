@@ -11,20 +11,24 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Link } from "react-router-dom";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { deleteTrackByID } from "../../utils/api_music";
-import { ModalWindow } from "../ModalWindow/ModalWindow";
+import { MusicEditForm } from "./MusicEditForm/MusicEditForm";
+import { MusicSignOutModal } from "./MusicSignOutModal/MusicSignOutModal";
 
 
-export const MusicCard = ({track_name, track, langEn, trackList, setTrackList, track_description_en, handleMusicLike, track_id, currentUser, track_description_ru, track_image, track_source, track_likes }) => {
+
+export const MusicCard = ({track_name, track, langEn, trackList, setTrackList, track_description_en, handleMusicLike, track_id, 
+  currentUser, track_description_ru, track_image, track_source, track_likes }) => {
   // Стейт для лайков
   const [musicIsLiked, setMusicIsLiked] = useState(false)
   // Стейт для попапа о том, что нужно авторизоваться
   const [showPopoverNotAuth, setShowPopoverNotAuth] = useState(false)
   // Стейт для изменения класса кнопки с редактированием
   const [copied, setCopied] = useState(false)
+  // Cтейт для модального окна при удалении
+    const [showModalDelete, setShowModalDelete] = useState(false)
 
-  const [showModalDelete, setShowModalDelete] = useState(false)
-
-
+  // Cтейт для модального окна при редактировании
+  const [showModalEdit, setShowModalEdit] = useState(false)
 
 
   // Чтобы отлайканные актуальный юзером карточки меняли цвет лайка на оранжевый, а при снятии лайка - обратно становились белыми  
@@ -37,32 +41,31 @@ export const MusicCard = ({track_name, track, langEn, trackList, setTrackList, t
 
 // Кнопка при нажатии на лайк
 const handleLikeClick = () => {
-  if (currentUser !== '')
-  {handleMusicLike(track);
-  setShowPopoverNotAuth(false)}
-  
+  if (currentUser !== '') {
+    handleMusicLike(track);
+    setShowPopoverNotAuth(false)
+    }
   else setShowPopoverNotAuth(true)
-} 
+  } 
 
 useEffect(()=>{
   if (showPopoverNotAuth)
-  setTimeout(()=>{setShowPopoverNotAuth(false)}, 5000)
+    setTimeout(()=>{
+    setShowPopoverNotAuth(false)
+    }, 5000)
 },[currentUser, showPopoverNotAuth])
 
 
 
   // Логика для плеера
   const [isPlaying, setIsPlaying] = useState(false)  
- 
-  
   const [play, { pause, duration, sound }] = useSound(track_source);
   const [currentTime, setCurrentTime] = useState({
     min: "",
     sec: "",
   });
   const [seconds, setSeconds] = useState(0);
- 
-  
+
   const playingButton = () => {
     if (isPlaying) {
       pause();
@@ -111,7 +114,7 @@ useEffect(()=>{
   }
 // Функция для скачивания
 
-  function downloadTrack(blob, fileName = track_name) {
+  const downloadTrack = (blob, fileName = track_name) => {
     const href = URL.createObjectURL(blob);
     const a = Object.assign(document.createElement("a"), {
       href,
@@ -127,14 +130,15 @@ useEffect(()=>{
   }
 
 
-// Фетч для скачивания
-  const downloadOnClick = () => {
-  fetch(track_source,  {headers: {
+// // Фетч для скачивания
+  const downloadOnClick = (track_source) => {
+  fetch(track_source,  {
+    headers: {
     "Content-Type": "audio/mpeg",
     "Content-Disposition": "attachment"},
   })
-  .then( res => res.blob() )
-  .then( blob => {
+  .then( (res) => res.blob() )
+  .then( (blob) => {
     downloadTrack(blob)
   });
 }
@@ -149,6 +153,9 @@ const deleteMusicCard = async (track_id) => {
 
 
 
+
+
+
   return (
   <div className="music_page_audio_player_container" >
     <div>
@@ -156,27 +163,10 @@ const deleteMusicCard = async (track_id) => {
         <div className="music_page_audio_player_edit_wrpapper" >
         <span onClick={()=>{setShowModalDelete(true)}} title="Delete" className="music_page_audio_player_delete_icon"><DeleteOutlineIcon/></span>
         </div>
-        
-                {/* Модальное окно с подтверднением выхода из аккаунта */}
-                {!!showModalDelete &&
-                    
-                    <div className={cn("modal", { ["active"]: showModalDelete })} onClick={()=>{setShowModalDelete(false)}}>
-                      <div className={cn("modal_content", { ["active"]: showModalDelete })}  onClick={(e) => e.stopPropagation()}>
-                          <div className='modal_top'>
-                            <h3 style={{color:'darkorange'}}>Are you sure?</h3>
-                          </div>
-                          <div className='modal_btns_wrapper'>
-                            <button onClick={()=>{deleteMusicCard(track_id)}} className='modal_btn_warn'>Delete Track</button>
-                            <button onClick={()=>{setShowModalDelete(false)}} className='modal_btn'>Cancel</button>
-                        </div>
-                      </div>
-                  </div>
-                  }
-
-
-
-
-
+          {/* Модальное окно с подтверждением выхода из аккаунта */}
+          {showModalDelete &&
+            <MusicSignOutModal showModalDelete={showModalDelete} track_id={track_id} deleteMusicCard={deleteMusicCard} setShowModalDelete={setShowModalDelete}/>
+          }
         <div>
           <h3 className="music_page_track_title">{track_name}</h3>
           {langEn ?  <p className="music_page_track_description">{track_description_en}</p> 
@@ -231,7 +221,6 @@ const deleteMusicCard = async (track_id) => {
         </div>
           <div className="music_page_player_controls">
           {/* Попап с требованием авторизоваться, чтобы ставить лайки */}
-          
             <div className="music_page_player_controls_like_wrapper">
               {/* Кнопка с лайком */}
               <button onClick={()=>{handleLikeClick()}}  className={cn("music_page_player_controls_like_btn", { ["music_page_player_controls_like_btn_Active"]: musicIsLiked })} title={langEn ? 'Like' : 'Нравится'}><ThumbUpOutlinedIcon fontSize="14px"/>
@@ -242,17 +231,24 @@ const deleteMusicCard = async (track_id) => {
               
             </div>
 
-
             <div className="music_page_player_controls_btn_copy_wrapper">
-              
-              {/* Попап при копировании, исчезает */}
               <span className={cn("music_player_copied_temp_span", {["music_player_copied_temp_span_Active"]: copied})} > {langEn? 'Copied!' : "Скопировано!"}</span>
               
               {/* Кнопка для редактирования */}
-              <button className="music_page_audio_player_edit_btn"
+              <button onClick={()=>{setShowModalEdit(true)}} className="music_page_audio_player_edit_btn"
                 title={langEn ? 'Edit' : 'Редактировать'}><EditIcon fontSize="14px"/>
               </button>
               
+              {/* Модальное окно с редактированием */}
+
+              {showModalEdit && (
+                <div className={cn("modal", { ["active"]: showModalEdit })} onClick={()=>{setShowModalEdit(false)}}>
+                  <div className={cn("modal_content", { ["active"]: showModalEdit })}  onClick={(e) => e.stopPropagation()}>
+                    <MusicEditForm track={track} track_id={track_id} setTrackList={setTrackList} langEn={langEn} setShowModalEdit={setShowModalEdit}/>
+                  </div>
+                </div> 
+              )}
+
               {/* Кнопка для копирования ссылки на аудио файл */}
               <button className="music_page_audio_player_edit_btn"
               onClick={()=>{copyOnClick()}}
@@ -261,20 +257,20 @@ const deleteMusicCard = async (track_id) => {
               {/* Кнопка для скачивания */}
               <button 
               className="music_page_audio_player_edit_btn"
-              onClick={()=>{downloadOnClick()}} title={langEn ? 'Download' : 'Скачать'} >
+              onClick={()=>{downloadOnClick(track_source)}} title={langEn ? 'Download' : 'Скачать'} >
                 <DownloadIcon fontSize="14px"/>
               </button>
-              
             </div>
-            
           </div>
-              {showPopoverNotAuth && 
+             {/* Попап при копировании, исчезает */}
+            {showPopoverNotAuth && 
             <div className="music_page_player_warn_wrapper">
               <Link style={{textDecoration: 'none'}} to='/sign-in'>
               <small className="music_page_player_warn">{
                 langEn ? 'Please, sign in to be able to give likes' : 'Пожалуйста, войдите, чтобы ставить лайки'}</small>
               </Link>
-            </div>}
+            </div>
+            }
       </div>
     </div>
   </div>

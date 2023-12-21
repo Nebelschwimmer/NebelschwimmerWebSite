@@ -1,4 +1,4 @@
-// -----------  API FOR LIKES-----------------
+
 const onResponse = (res) => {
   return res.ok
     ? res.json()
@@ -38,7 +38,6 @@ export const deleteMusicLikeById = (body) => {
 
 
 export const addNewTrack = (formData) => {
- 
   return fetch('http://localhost:3020/music/upload', {
     // headers: {
     //   "Content-Type": "multipart/form-data"
@@ -48,9 +47,19 @@ export const addNewTrack = (formData) => {
     
   }).then((res) => onResponse(res));
 }
+export const updateTrack = (track_id, body) => {
+  return fetch('http://localhost:3020/music/update', {
+    headers: {
+      "Content-Type": "application/json"
+    },
+    method: "PUT",
+    body: JSON.stringify({track_id, ...body})
+    
+  }).then((res) => onResponse(res));
+}
+
 
 export const deleteTrackByID = (track_id) => {
- 
   return fetch('http://localhost:3020/music/delete', {
     headers: {
       "Content-Type": "application/json"
@@ -59,4 +68,14 @@ export const deleteTrackByID = (track_id) => {
     body: JSON.stringify({track_id: track_id})
     
   }).then((res) => onResponse(res));
+}
+
+export const downloadOnClick = (track_source) => {
+  fetch(track_source,  {
+    headers: {
+    "Content-Type": "audio/mpeg",
+    "Content-Disposition": "attachment"},
+  })
+  .then( res => res.blob() )
+  
 }

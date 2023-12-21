@@ -1,5 +1,4 @@
-import Text from './texts'
-import textfile from './BORED.txt'
+
 import { useState, useEffect } from 'react';
 
 import './textCard.css'

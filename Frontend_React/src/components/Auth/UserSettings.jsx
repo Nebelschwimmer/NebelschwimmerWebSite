@@ -35,12 +35,14 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
   
   
   // Таймаут для спиннера
-    // useEffect(()=>{
-    //   setTimeout(()=>{
-    //   if (showSpinner) setShowSpinner(false)
-    //   },500)
-    // }, 
-    // [showSpinner])
+    useEffect(()=>{
+      setTimeout(()=>{
+      if (showSpinner) setShowSpinner(false)
+      },700)
+    }, 
+    [currentUser])
+
+  
 
     // Таймаут для надписи с ошибкой
     useEffect(()=>{
@@ -102,7 +104,7 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
     await updateProfile(auth.currentUser, {
       displayName: userName, photoURL: avatarURL
     })
-    .then(()=>{setPrintChanged(true)})
+    .then(()=>{setPrintChanged(true); setShowSpinner(true)})
     .catch((error) => {
       const errorCode = error.code;
       if (errorCode === 'auth/invalid-profile-attribute') setShowError(true)
@@ -119,7 +121,7 @@ export const UserSettings = ({currentUser, setCurrentUser, showModal, onSignOut,
         // Сеттим с колбэком
         setCurrentUser(()=>({...newUser}));
         // Сетим спинер
-        setShowSpinner(true)
+        
       })
     }
     catch(errors) {

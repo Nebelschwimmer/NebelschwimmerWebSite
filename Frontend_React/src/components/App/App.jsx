@@ -16,7 +16,7 @@ import { ResetPassword } from '../Auth/ResetPassword.jsx';
 import { addLikeById } from '../../utils/api_music.js';
 import { getMusicList } from '../../utils/api_music.js';
 import { deleteMusicLikeById } from '../../utils/api_music.js'; 
-
+import { AddTextPage } from '../../pages/TextsPage/AddTextPage/AddTextPage.jsx';
 
 function App() {
   // Стейты:
@@ -28,6 +28,8 @@ function App() {
   const [showModal, setShowModal] = useState(false);
   // Для музыки
   const [trackList, setTrackList] = useState([]);
+
+  const [texts, setTexts] = useState([]);
 
 
   // Функция для навигации
@@ -107,11 +109,14 @@ return (
       <Routes>
         <Route path='/' element={<HomePage langEn={langEn} setLangEn={setLangEn} />}></Route> 
         <Route path='/music' element={<MusicPage showModal={showModal} setShowModal={setShowModal} trackList={trackList} handleMusicLike={handleMusicLike} setTrackList={setTrackList} langEn={langEn} currentUser={currentUser}/>}></Route>
-        <Route path='/texts' element={<TextsPage langEn={langEn}/>}></Route>
+        <Route path='/texts' element={<TextsPage  currentUser={currentUser} showModal={showModal} 
+        setShowModal={setShowModal} langEn={langEn} texts={texts} setTexts={setTexts}/>}></Route>
+        <Route path='/texts/add-text' element={<AddTextPage texts={texts} setTexts={setTexts} langEn={langEn}/>}></Route> 
         <Route path='/register' element={<Register langEn={langEn} currentUser={currentUser} setCurrentUser={setCurrentUser} signInWithGoogle={signInWithGoogle}/>}></Route>
         <Route path='/user-settings' element={<UserSettings showModal={showModal} setShowModal={setShowModal} onSignOut={onSignOut}  currentUser={currentUser} setCurrentUser={setCurrentUser}/>}></Route>
         <Route path='/sign-in' element={<SignIn langEn={langEn} signInWithGoogle={signInWithGoogle}/>}></Route>
         <Route path='/password-reset' element={<ResetPassword langEn={langEn}/>}></Route>       
+      
       </Routes>
     </main>
     <Footer/>
