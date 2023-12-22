@@ -21,7 +21,6 @@ export const getMusicList = () => {
     headers: {
       "Content-Type": "application/json"
     },
-    method: "GET",
   }).then((res) => onResponse(res));
 }
 

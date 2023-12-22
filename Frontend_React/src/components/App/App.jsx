@@ -16,7 +16,8 @@ import { ResetPassword } from '../Auth/ResetPassword.jsx';
 import { addLikeById } from '../../utils/api_music.js';
 import { getMusicList } from '../../utils/api_music.js';
 import { deleteMusicLikeById } from '../../utils/api_music.js'; 
-import { AddTextPage } from '../../pages/TextsPage/AddTextPage/AddTextPage.jsx';
+import { AddTextPage } from '../AddTextPage/AddTextPage.jsx';
+import { SingleTextPage } from '../SingleTextPage/SingleTextPage.jsx';
 
 function App() {
   // Стейты:
@@ -108,6 +109,7 @@ return (
 
       <Routes>
         <Route path='/' element={<HomePage langEn={langEn} setLangEn={setLangEn} />}></Route> 
+        <Route path='/texts/:textID' element={<SingleTextPage texts={texts} setTexts={setTexts} langEn={langEn} setLangEn={setLangEn} />}> </Route> 
         <Route path='/music' element={<MusicPage showModal={showModal} setShowModal={setShowModal} trackList={trackList} handleMusicLike={handleMusicLike} setTrackList={setTrackList} langEn={langEn} currentUser={currentUser}/>}></Route>
         <Route path='/texts' element={<TextsPage  currentUser={currentUser} showModal={showModal} 
         setShowModal={setShowModal} langEn={langEn} texts={texts} setTexts={setTexts}/>}></Route>
